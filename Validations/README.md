@@ -1,0 +1,4 @@
+- Chứa các file Validation để kiểm tra tính hợp lệ của dữ liệu đầu vào trong ứng dụng.
+- Cách đặt tên file Validation:
+    - Tên file Validation phải kết thúc bằng `Validation.php`.
+    - Tên file Validation phải được viết theo định dạng CamelCase, ví dụ: `UserValidation.php`, `ProductValidation.php`.

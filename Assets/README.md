@@ -1,0 +1,2 @@
+- Chứa thư mục js, css, bootstrap, images của template
+- Có thể chia làm 2 thư mục: Client và Admin để dễ quản lý

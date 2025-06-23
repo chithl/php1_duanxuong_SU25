@@ -1,0 +1,197 @@
+<?php
+
+require_once 'Models/Order.php';
+
+/**
+ * Class OrderController
+ *
+ * Lớp OrderController quản lý các chức năng CRUD cho đơn hàng trong phần quản trị.
+ */
+class OrderController{
+
+    /**
+     * @var Order $_orderModel Đối tượng model Order để thao tác với dữ liệu đơn hàng
+     */
+    private $_orderModel;
+
+    /**
+     * OrderController constructor.
+     * Khởi tạo đối tượng Order model.
+     */
+    public function __construct(){
+        $this->_orderModel = new Order();
+    }
+
+    /**
+     * Hiển thị danh sách các đơn hàng.
+     *
+     * Lấy tất cả đơn hàng và nạp giao diện danh sách cho người dùng.
+     */
+    public function index(){
+        $result = $this->_orderModel->getAll();
+        // hiển thị danh sách danh mục cho người dùng
+        include 'Views/Admin/Order/index.php';
+    }
+
+    /**
+     * Hiển thị form sửa đơn hàng.
+     *
+     * Kiểm tra id, lấy thông tin đơn hàng theo id và nạp giao diện form sửa.
+     */
+    public function edit(){
+        // bắt lỗi id phải là số nguyên dương
+        $id = $_GET['id'] ?? '';
+
+        if ($id == ''){
+            header('location: ?page=order&action=index');
+            exit;
+        }
+
+        $result = $this->_orderModel->getOne($id);
+        // nếu ko có dữ liệu
+        if (!$result){
+            header('location: ?page=order&action=index');
+            exit;
+        }
+
+        // nếu tìm thấy
+        // hiển thị giao diện form sửa
+        include 'Views/Admin/Order/edit.php';
+    }
+
+    /**
+     * Thực hiện cập nhật đơn hàng.
+     *
+     * Lấy dữ liệu từ form, kiểm tra hợp lệ và cập nhật vào cơ sở dữ liệu.
+     * Chuyển hướng về trang danh sách hoặc trang sửa tuỳ theo kết quả.
+     */
+    public function update(){
+        //    lấy dữ liệu ngừoi dùng nhập
+        // kiểm tra trống
+        // kiểm tra trùng tên => ngoại trừ tên hiện tại của id đang sửa
+
+        $id     = $_POST['id'] ?? '';
+        $name   = $_POST['name'] ?? '';
+        $status = $_POST['status'] ?? '';
+
+        // truyền dữ liệu qua model
+        $data = [
+            'id'     => $id,
+            'name'   => $name,
+            'status' => $status
+        ];
+
+        // model trả về kết quả
+        $result = $this->_orderModel->update($id, $data);
+
+        // nếu thành công => chuyển sang trang danh sách và thông báo
+        if ($result){
+            header('location: ?page=order');
+        }
+        else{
+            header('location: ?page=order&action=edit&id=' . $id);
+        }
+        // nếu thất bại thì chuyển sang trang edit
+
+        // kiểm tra kết quả cập nhật thành công / thất bại
+    }
+
+    /**
+     * Hiển thị form thêm mới đơn hàng.
+     *
+     * Nạp giao diện trang thêm đơn hàng.
+     */
+    public function create(){
+        // hiển thị giao diện trang thêm danh mục
+        include 'Views/Admin/Order/create.php';
+    }
+
+    /**
+     * Thực hiện thêm mới đơn hàng vào cơ sở dữ liệu.
+     *
+     * Kiểm tra dữ liệu đầu vào, xử lý lỗi và thêm mới vào cơ sở dữ liệu.
+     * Chuyển hướng về trang danh sách hoặc trang thêm tuỳ theo kết quả.
+     */
+    public function store(){
+        // bắt đầu kiểm tra, bắt lỗi client và admin
+        // kiểm tra có $_POST create không ?
+
+        if (!isset($_POST['create'])){
+            header('location: ?page=order&action=index');
+            exit;
+        }
+
+        // kiểm tra các trường dữ liệu không được trống
+        // $name = isset($_POST['name']) ? $_POST['name'] : '';
+        $name   = $_POST['name'] ?? '';
+        $status = $_POST['status'] ?? '';
+
+        // bắt trùng
+        // getByName($name) nếu trả mảng rỗng => insert
+        // nếu ko báo lỗi trùng name
+
+        // lưu session lỗi
+        $error = FALSE;
+        if ($name == ''){
+            // echo 'Chưa nhập';
+            $error_name_message = '';
+            $error_name_value   = '';
+            $error              = TRUE;
+        }
+
+        if ($error){
+            header('location: ?page=order&action=create');
+            exit;
+        }
+        // kết thúc kiểm tra
+
+        // thêm vào cơ sở dữ liệu
+        // dữ liệu để thêm: $name, $status
+
+        $data = [
+            'name'   => $name,
+            'status' => $status
+        ];
+        // gọi model
+        $result = $this->_orderModel->insert($data);
+
+        // var_dump($result);
+        if ($result){
+            // Lưu session thêm thành công
+            // Chuyển về trang danh sách
+            header('location: ?page=order&action=index');
+            exit;
+        }
+
+        // Lưu session thêm thất bại
+        header('location: ?page=order&action=create');
+
+
+        // Chuyển về trang danh sách danh mục
+    }
+
+    /**
+     * Thực hiện xoá đơn hàng.
+     *
+     * Kiểm tra id, xoá đơn hàng theo id và chuyển hướng về trang danh sách.
+     */
+    public function delete(){
+        $id = $_GET['id'] ?? '';
+
+        if ($id == ''){
+            header('location: ?page=order&action=index');
+            exit;
+        }
+
+        $result = $this->_orderModel->delete($id);
+
+        if ($result){
+            // thành công
+
+        }
+        else{
+            // thất bại
+        }
+        header('location: ?page=order&action=index');
+    }
+}
