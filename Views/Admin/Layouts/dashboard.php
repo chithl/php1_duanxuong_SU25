@@ -1,8 +1,4 @@
-<?php //if(!isset($_SESSION['admin']) && empty($_SESSION['admin'])){
-//    header('Location: dashboard.php?page=login&action=form');
-//    exit();
-//}
-?>
+
     <!-- ============================================================== -->
     <!-- Page wrapper  -->
     <!-- ============================================================== -->

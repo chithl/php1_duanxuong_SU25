@@ -1,14 +1,9 @@
 <?php
 ob_start();
-//if(!isset($_SESSION['admin'])) {
-//    header('Location: admin.php?page=login&action=form');
-//    exit();
-//}
-
 ?>
+
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -52,6 +47,7 @@ ob_start();
     <!-- Custom CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link href="Assets/Admin/dist/css/style.min.css" rel="stylesheet"/>
+	<link href="Assets/Admin/dist/css/login.css" rel="stylesheet"/>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -127,26 +123,22 @@ ob_start();
             <!-- ============================================================== -->
             <!-- End Logo -->
             <!-- ============================================================== -->
-            <div class="navbar-collapse collapse" id="navbarSupportedContent" data-navbarbg="skin5">
+	        <div class="navbar-collapse collapse" data-navbarbg="skin5">
                 <!-- ============================================================== -->
                 <!-- toggle and nav items -->
                 <!-- ============================================================== -->
                 <ul class="navbar-nav float-start me-auto">
+                    <?php if (isset($_SESSION['admin'])) : ?>
                     <li class="nav-item d-none d-lg-block">
                         <a class="nav-link sidebartoggler waves-effect waves-light" href="javascript:void(0)"
                            data-sidebartype="mini-sidebar"><i class="mdi mdi-menu font-24"></i></a>
                     </li>
+                    <? endif; ?>
                     <!-- ============================================================== -->
                     <!-- Search -->
                     <!-- ============================================================== -->
-                    <li class="nav-item search-box">
-                        <a class="nav-link waves-effect waves-dark" href="javascript:void(0)"><i
-                                    class="mdi mdi-magnify fs-4"></i></a>
-                        <form class="app-search position-absolute">
-                            <input type="text" class="form-control" placeholder="Search &amp; enter"/>
-                            <a class="srh-btn"><i class="mdi mdi-window-close"></i></a>
-                        </form>
-                    </li>
+
+
                 </ul>
                 <div class="ml-auto d-flex align-items-center">
                     <?php if(isset($_SESSION['admin'])): ?>
@@ -207,6 +199,10 @@ ob_start();
     <!-- ============================================================== -->
     <!-- Left Sidebar - style you can find in sidebar.scss  -->
     <!-- ============================================================== -->
+
+    <?php
+    $currentPage = $_GET['page'] ?? '';
+    if (isset($_SESSION['admin'])): ?>
     <aside class="left-sidebar" data-sidebarbg="skin5">
         <!-- Sidebar scroll-->
         <div class="scroll-sidebar">
@@ -316,6 +312,8 @@ ob_start();
         </div>
         <!-- End Sidebar scroll-->
     </aside>
+    <?php elseif ($currentPage !== 'auth'): ?><?php header("Location: admin.php?page=auth&action=login");
+        exit; ?><?php endif; ?>
     <!-- ============================================================== -->
     <!-- End Left Sidebar - style you can find in sidebar.scss  -->
     <!-- ============================================================== -->

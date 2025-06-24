@@ -5,7 +5,10 @@ session_start();
 //     header('location: dashboard.php');
 //     exit;
 // }
-
+//if (!isset($_SESSION['admin']) && empty($_SESSION['admin'])) {
+//    header('Location: admin.php?page=auth&action=login');
+//    exit();
+//}
 
 $page   = isset($_GET['page']) ? $_GET['page'] : '';
 $action = isset($_GET['action']) ? $_GET['action'] : '';
@@ -74,9 +77,19 @@ switch ($page){
             case 'logout':
                 $authControl->logout();
                 break;
-            case 'token':
-                $authControl->token();
+            case 'forgotPassword':
+                $authControl->forgotPassword();
                 break;
+            case 'storeForgotPassword':
+                $authControl->storeForgotPassword();
+                break;
+            case 'resetPassword':
+                $authControl->resetPassword();
+                break;
+            case 'storeResetPassword':
+                $authControl->storeResetPassword();
+                break;
+
         }
         break;
     case 'product-category':
