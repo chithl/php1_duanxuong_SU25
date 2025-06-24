@@ -165,4 +165,136 @@ class User{
             var_dump($e);
         }
     }
+
+    public function Login($username, $password)
+    {
+
+        $sql = "SELECT * FROM users WHERE username =:username";
+        $stmt = $this->_conn->prepare($sql);
+        $data = [
+            ':username' => $username
+        ];
+        $stmt->execute($data);
+        $user = $stmt->fetch();
+        $password_hash = $user['password'] ?? '';
+        if ($user && password_verify($password, $password_hash)) {
+            return $user;
+        } else {
+            return false;
+        }
+    }
+
+    public function resetToken($username, $email){
+        try{
+            $reset_token = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            date_default_timezone_set('Asia/Ho_Chi_Minh');
+            $reset_token_expiry = date('Y-m-d H:i:s', time() + 600);
+
+            $stmt = $this->_conn->prepare("
+                UPDATE users 
+                SET reset_token = :reset_token, reset_token_expiry = :reset_token_expiry 
+                WHERE username = :username AND email = :email
+            ");
+            $data = [
+                'reset_token'        => $reset_token,
+                'reset_token_expiry' => $reset_token_expiry,
+                'username'           => $username,
+                'email'              => $email
+            ];
+            $stmt->execute($data);
+
+            require_once __DIR__ . '/../Assets/PHPMailer-6.10.0/src/PHPMailer.php';
+            require_once __DIR__ . '/../Assets/PHPMailer-6.10.0/src/SMTP.php';
+            require_once __DIR__ . '/../Assets/PHPMailer-6.10.0/src/Exception.php';
+
+            $mail = new \PHPMailer\PHPMailer\PHPMailer(TRUE);
+
+            $mail->CharSet  = 'UTF-8';
+            $mail->Encoding = 'base64';
+
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = TRUE;
+            $mail->Username   = 'nguyenben08083508@gmail.com';
+            $mail->Password   = 'qosy bpdj qlkz wnmb';
+            $mail->SMTPSecure = 'tls';
+            $mail->Port       = 587;
+
+            $mail->setFrom('nguyenben08083508@gmail.com', 'WD20301');
+            $mail->addAddress($email, $username);
+
+            $mail->isHTML(TRUE);
+            $mail->Subject = 'Mã xác nhận đặt lại mật khẩu';
+            $mail->Body    = "Xin chào <b>$username</b>,<br><br>Mã xác nhận đặt lại mật khẩu của bạn là: 
+                          <h2>$reset_token</h2><br>Mã này sẽ hết hạn sau 10 phút.<br><br>-- <i>Xưởng thực hành FPT Polytechnic</i>";
+
+            $mail->send();
+
+            return $reset_token;
+        }catch (PDOException $e){
+            $errorMessage = date('Y-m-d H:i:s') . " - Lỗi khi reset token: " . $e->getMessage() . PHP_EOL;
+            file_put_contents(__DIR__ . '/../Logs/Error.log', $errorMessage, FILE_APPEND);
+
+            return FALSE;
+        }catch (Exception $e){
+            $errorMessage = date('Y-m-d H:i:s') . " - Lỗi gửi email: " . $e->getMessage() . PHP_EOL;
+            file_put_contents(__DIR__ . '/../Logs/Error.log', $errorMessage, FILE_APPEND);
+
+            return FALSE;
+        }
+    }
+
+    public function getInfoExact($username){
+        $stmt = $this->_conn->prepare("SELECT * FROM users WHERE username = :username");
+        $stmt->bindParam(":username", $username);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getTokenInfo($username, $token){
+        $stmt = $this->_conn->prepare("SELECT reset_token_expiry FROM users WHERE username = :username AND reset_token = :token");
+        $stmt->execute([
+            'username' => $username,
+            'token'    => $token
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function resetPassword($username, $token, $newPassword){
+        try{
+            $stmt = $this->_conn->prepare(
+                "UPDATE users SET password = :password, reset_token = NULL, reset_token_expiry = NULL WHERE username = :username"
+            );
+            $data = [
+                'username' => $username,
+                'password' => password_hash($newPassword, PASSWORD_DEFAULT)
+            ];
+
+            return $stmt->execute($data);
+        }catch (PDOException $e){
+            $errorMessage = date('Y-m-d H:i:s') . " - Lỗi khi đổi mật khẩu mới: " . $e->getMessage() . PHP_EOL;
+            file_put_contents(__DIR__ . '/../Logs/Error.log', $errorMessage, FILE_APPEND);
+
+            return FALSE;
+        }
+    }
+
+    /**
+     * Cập nhật thông tin một bản ghi theo id.
+     *
+     * @param int   $id   ID của user
+     * @param array $data Dữ liệu cập nhật (name, status, id)
+     *
+     * @return int|null Số dòng bị ảnh hưởng hoặc null nếu thất bại
+     */
+
+    /**
+     * Xoá một bản ghi theo id.
+     *
+     * @param int $id ID của user cần xoá
+     *
+     * @return int|null Số dòng bị ảnh hưởng hoặc null nếu thất bại
+     */
 }

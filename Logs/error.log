@@ -1,0 +1,5 @@
+2025-06-24 04:43:13 - SQLSTATE[HY000]: General error: 1366 Incorrect integer value: '' for column 'discount_price' at row 1
+2025-06-24 04:47:17 - SQLSTATE[HY000]: General error: 1366 Incorrect integer value: '' for column 'discount_price' at row 1
+2025-06-24 09:33:47 - SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens
+2025-06-24 09:33:51 - SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens
+2025-06-24 09:33:55 - SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens
