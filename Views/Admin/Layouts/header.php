@@ -180,7 +180,7 @@ ob_start();
                             <a class="dropdown-item" href="javascript:void(0)"><i
                                         class="mdi mdi-settings me-1 ms-1"></i> Cài đặt</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="?page=logout"><i class="fa fa-power-off me-1 ms-1"></i> Đăng
+                            <a class="dropdown-item" href="?page=auth&action=logout"><i class="fa fa-power-off me-1 ms-1"></i> Đăng
                                 xuất</a>
                             <div class="dropdown-divider"></div>
                             <div class="ps-4 p-10">

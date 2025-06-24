@@ -32,21 +32,13 @@ class AuthController{
             $username = trim($_POST['username'] ?? '');
             $password = trim($_POST['password'] ?? '');
             if (empty($username)) {
-//                $username_error = "Tên đăng nhập không được để trống";
-//                $error['username_error'] = $username_error;
-                echo 'Tên đăng nhập không được để trống';
-            }
-            // Tài khoảng không được chứa khoảng trắng
-            if (preg_match('/\s/', $username)) {
-//                $username_error = "Tên đăng nhập không được chứa khoảng trắng";
-//                $error['username_error'] = $username_error;
-                echo 'Tên đăng nhập không được chứa khoảng trắng';
+                $username_error = "Tên đăng nhập không được để trống";
+                $error['username_error'] = $username_error;
             }
             if (empty($password)) {
-//                $username_error = "Mật khẩu không được để trống";
-//                $error['password_error'] = $username_error;
+                $username_error = "Mật khẩu không được để trống";
+                $error['password_error'] = $username_error;
                 echo 'Mật khẩu không được để trống';
-
             }
             if (!empty($error)) {
                 $error['username_old'] = $username;
@@ -57,44 +49,45 @@ class AuthController{
                 exit;
             }
             $user = $this->_userModel->Login($username, $password);
-//            if ($user) {
-//                if ($user['role'] != 1) {
-//                    $error['username_old'] = $username;
-//                    $error['password_old'] = $password;
-//                    $error['message'] = "Bạn không có quyền truy cập vào trang quản trị.";
-//                    $_SESSION['error'] = $error;
-//                    header("Location: admin.php?page=auth&action=login");
-//                    exit;
-//                }
-//                if ($user['status'] == 0) {
-//                    $error['username_old'] = $username;
-//                    $error['password_old'] = $password;
-//                    echo 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để biết thêm chi tiết.';
-//                    $_SESSION['error'] = $error;
-//                    header("Location: admin.php?page=auth&action=login");
-//                    exit;
-//                } else {
-//                    // Đăng nhập thành công
-//                    $_SESSION['admin_user'] = $user;
-//                    header("Location: admin.php");
-//                    exit;
-//                }
-//            } else {
-//                $error['username_old'] = $username;
-//                $error['password_old'] = $password;
-//                $error['message'] = "Tên đăng nhập hoặc mật khẩu không đúng";
-//                $_SESSION['error'] = $error;
-//                header("Location: admin.php?page=auth&action=login");
-//                exit;
-//            }
+            if ($user) {
+                if ($user['role'] != 'admin') {
+                    $error['username_old'] = $username;
+                    $error['password_old'] = $password;
+                    $error['message'] = "Bạn không có quyền truy cập vào trang quản trị.";
+                    $_SESSION['error'] = $error;
+                    header("Location: admin.php?page=auth&action=login");
+                    exit;
+                }
+                if ($user['status'] == 0) {
+                    $error['username_old'] = $username;
+                    $error['password_old'] = $password;
+                    echo 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để biết thêm chi tiết.';
+                    $_SESSION['error'] = $error;
+                    header("Location: admin.php?page=auth&action=login");
+                    exit;
+                } else {
+                    // Đăng nhập thành công
+                    $_SESSION['admin'] = $user;
+                    header("Location: admin.php");
+                    exit;
+                }
+            } else {
+                $error['username_old'] = $username;
+                $error['password_old'] = $password;
+                $error['message'] = "Tên đăng nhập hoặc mật khẩu không đúng";
+                $_SESSION['error'] = $error;
+                header("Location: admin.php?page=auth&action=login");
+                exit;
+            }
         }
         include 'Views/Admin/Auth/login.php';
+        unset($_SESSION['error']);
     }
 
     public function logout(){
         // Xoá session đăng nhập
         session_start();
-        unset($_SESSION['user']);
+        unset($_SESSION['admin']);
 
         // Chuyển hướng về trang đăng nhập
         header('Location: ?page=auth&action=login');

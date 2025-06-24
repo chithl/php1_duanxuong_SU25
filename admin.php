@@ -74,6 +74,9 @@ switch ($page){
             case 'logout':
                 $authControl->logout();
                 break;
+            case 'token':
+                $authControl->token();
+                break;
         }
         break;
     case 'product-category':
