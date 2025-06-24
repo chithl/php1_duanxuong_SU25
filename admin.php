@@ -63,6 +63,19 @@ switch ($page){
                 break;
         }
         break;
+    case'auth':
+        require_once 'Controllers/Admin/AuthController.php';
+        $authControl = new AuthController();
+        switch ($action){
+            case 'login':
+                // thực hiện gọi controller tương ứng
+                $authControl->login();
+                break;
+            case 'logout':
+                $authControl->logout();
+                break;
+        }
+        break;
     case 'product-category':
         require_once 'Controllers/Admin/ProductCategoryController.php';
         $productCategoryControl = new ProductCategoryController();
