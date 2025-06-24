@@ -27,13 +27,15 @@ class Product{
         $db          = new Database;
         $this->_conn = $db->getConnection();
     }
-    public function getCategories ()
-    {
-        $sql = "SELECT * FROM product_categories";
+
+    public function getCategories(){
+        $sql  = "SELECT * FROM product_categories";
         $stmt = $this->_conn->query($sql);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         return $result;
     }
+
     /**
      * Lấy tất cả dữ liệu từ bảng products với phân trang.
      *
@@ -44,7 +46,7 @@ class Product{
      */
     public function getAll(int $start = 0, int $end = 30){
         // require_once 'Models/Connect.php';
-        $sql = "SELECT * FROM $this->_table LIMIT :start, :end";
+        $sql = "SELECT p.id,c.name as category_name,p.name,p.price,p.stock,p.image,p.status FROM $this->_table p INNER JOIN product_categories c ON p.product_category_id = c.id LIMIT :start, :end";
 
         $stmt = $this->_conn->prepare($sql);
 
@@ -67,8 +69,8 @@ class Product{
      *
      * @return array Mảng kết quả các bản ghi
      */
-    public function getAllByStatus($status = '1'){
-        $sql = "SELECT * FROM $this->_table WHERE status=:status";
+    public function getAllByStatus($status = 'available'){
+        $sql = "SELECT p.id,c.name as category_name,p.name,p.price,p.stock,p.image,p.status FROM $this->_table p INNER JOIN product_categories c ON p.product_category_id = c.id WHERE p.status=:status";
 
         $stmt = $this->_conn->prepare($sql);
 
@@ -79,6 +81,25 @@ class Product{
         $stmt->execute($data);
 
         $result = $stmt->fetchAll();
+
+        return $result;
+    }
+
+    public function getByName($keyword){
+        $sql     = "SELECT p.id,c.name as category_name,p.name,p.price,p.stock,p.image,p.status FROM $this->_table p INNER JOIN product_categories c ON p.product_category_id = c.id WHERE p.name LIKE '%$keyword%'";
+        $product = $this->_conn->query($sql);
+        // $product = $this->_conn->prepare($sql);
+        // $product->execute([':keyword' => "%$keyword%"]);
+        $result = $product->fetchAll();
+
+        return $result;
+    }
+
+    public function getByNameAndStatus($keyword, $status){
+        $sql     = "SELECT p.id,c.name as category_name,p.name,p.price,p.stock,p.image,p.status FROM $this->_table p INNER JOIN product_categories c ON p.product_category_id = c.id WHERE p.name LIKE :keyword AND p.status = :status";
+        $product = $this->_conn->prepare($sql);
+        $product->execute([':keyword' => "%$keyword%", ":status" => $status]);
+        $result = $product->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
     }
@@ -114,15 +135,41 @@ class Product{
      */
     public function insert($data){
         try{
-            $sql    = "INSERT INTO $this->_table (name, status) VALUES (:name, :status)";
+            $sql = "INSERT INTO $this->_table (product_category_id,name,description,weight,price,discount_price,view,stock,image,is_featured) VALUES (:product_category_id,:name,:description,:weight,:price,:discount_price,:view,:stock,:image,:is_featured)";
             $stmt   = $this->_conn->prepare($sql);
             $result = $stmt->execute($data);
 
             return $result;
-        }
-        catch (PDOException $e){
+        }catch (PDOException $e){
             // ghi log
-            var_dump($e->getMessage());
+            file_put_contents(
+                __DIR__ . '/../Logs/error.log', // Đường dẫn tới thư mục logs
+                date('Y-m-d H:i:s') . ' - ' . $e->getMessage() . PHP_EOL,
+                FILE_APPEND
+            );
+
+        }
+    }
+
+    public function checkName($name){
+        $sql     = "SELECT COUNT(*) FROM $this->_table WHERE name = :name";
+        $product = $this->_conn->prepare($sql);
+        $product->execute([':name' => $name]);
+        if ($product->fetchColumn() > 0){
+            return TRUE;
+        }else{
+            return FALSE;
+        }
+    }
+
+    public function checkIdAndName($id, $name){
+        $sql     = "SELECT COUNT(*) FROM $this->_table WHERE id != :id AND name = :name";
+        $product = $this->_conn->prepare($sql);
+        $product->execute([':id' => $id, ':name' => $name]);
+        if ($product->fetchColumn() > 0){
+            return TRUE;
+        }else{
+            return FALSE;
         }
     }
 
@@ -134,18 +181,23 @@ class Product{
      *
      * @return int|null Số dòng bị ảnh hưởng hoặc null nếu thất bại
      */
-    public function update(int $id, array $data){
+    public function update(array $data){
         try{
-            $sql  = "UPDATE $this->_table SET name=:name,status=:status WHERE id=:id";
+            $sql = "UPDATE $this->_table SET name=:name,product_category_id=:product_category_id,description=:description,price=:price,weight=:weight,discount_price=:discount_price,stock=:stock,image=:image,is_featured=:is_featured ,status=:status WHERE id=:id";
             $stmt = $this->_conn->prepare($sql);
 
             $result = $stmt->execute($data);
 
-            return $stmt->rowCount();
+            return $result;
+
             // return $result;
-        }
-        catch (PDOException $e){
+        }catch (PDOException $e){
             // ghi log
+            file_put_contents(
+                __DIR__ . '/../Logs/error.log', // Đường dẫn tới thư mục logs
+                date('Y-m-d H:i:s') . ' - ' . $e->getMessage() . PHP_EOL,
+                FILE_APPEND
+            );
             var_dump($e->getMessage());
         }
     }
@@ -168,8 +220,7 @@ class Product{
             return $stmt->rowCount();
 
             // return $result;
-        }
-        catch (PDOException $e){
+        }catch (PDOException $e){
             // echo '<pre>';
             var_dump($e);
         }
