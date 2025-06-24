@@ -39,7 +39,7 @@ class ProductController{
             $result = $this->_productModel->getAllByStatus($status);
         }
         // hiển thị danh sách danh mục cho người dùng
-        include 'Views/Admin/ProductCategory/index.php';
+        include 'Views/Admin/Product/index.php';
     }
 
     /**
@@ -113,7 +113,8 @@ class ProductController{
      */
     public function create(){
         // hiển thị giao diện trang thêm danh mục
-        include 'Views/Admin/ProductCategory/create.php';
+        $categories = $this->_productModel->getCategories();
+        include 'Views/Admin/Product/create.php';
     }
 
     /**
@@ -122,50 +123,114 @@ class ProductController{
      * Kiểm tra dữ liệu đầu vào, xử lý lỗi và thêm mới vào cơ sở dữ liệu.
      * Chuyển hướng về trang danh sách hoặc trang thêm tuỳ theo kết quả.
      */
-    public function store(){
-        // bắt đầu kiểm tra, bắt lỗi client và admin
-        // kiểm tra có $_POST create không ?
+    public function store()
+    {
+        if (isset($_POST["create"])):
+            $category_id = $_POST['category_id'] ?? '';
+            if ($_FILES['image']['error'] === UPLOAD_ERR_NO_FILE) {
+                $image_error = "Vui lòng chọn file để upload";
+                $errors['image_error'] = $image_error;
+            } else {
+                $target_dir = "Uploads/";
 
-        if (!isset($_POST['create'])){
+                // Lấy kiểu file
+                $imageFileType = strtolower(pathinfo(basename($_FILES['image']['name']), PATHINFO_EXTENSION));
+                if ($imageFileType != 'webp' && $imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'png') {
+                    $errors['image_error'] = 'Sai định dạng file';
+                }
+                // Đổi tên
+                $new_name = date('ymdhs') . '.' . $imageFileType;
+                // Vị trí chuyển ảnh vào
+                $target_file = $target_dir . $new_name;
+            }
+            if (isset($_POST["name"]) && isset($_POST["price"])) {
+                $category_id = trim(htmlspecialchars($_POST['category_id']));
+                $name = trim(htmlspecialchars($_POST["name"]));
+                $description = trim(htmlspecialchars($_POST["description"]));
+                $price = trim(htmlspecialchars($_POST["price"]));
+                $featured =trim(htmlspecialchars($_POST['featured'])) ;
+                $discount_price = trim(htmlspecialchars($_POST["discount_price"])) ?? 0;
+                $status = trim(htmlspecialchars($_POST["status"]));
+                $image = (isset($new_name)) ? $new_name : '';
+
+                if (empty($category_id)) {
+                    $category_id_error = "Vui lòng chọn mã loại sản phẩm";
+                    $errors['category_id_error'] = $category_id_error;
+                }
+                if (empty($name)) {
+                    $name_error = "Vui lòng nhập tên sản phẩm";
+                    $errors['name_error'] = $name_error;
+                }
+                if (empty($price)) {
+                    $price_error = "Vui lòng nhập giá sản phẩm";
+                    $errors['price_error'] = $price_error;
+                } elseif ($price < 0) {
+                    $price_error = "Giá sản phẩm phải lớn hơn 0";
+                    $errors['price_error'] = $price_error;
+                } elseif (!is_numeric($price)) {
+                    $price_error = "Giá sản phẩm phải là số";
+                    $errors['price_error'] = $price_error;
+                }
+                if (empty($featured)) {
+                    $featured_error = "Vui lòng nhập đặc trưng sản phẩm";
+                    $errors['featured_error'] = $featured_error;
+                }
+                if (empty($quantity)) {
+                    $quantity_error = "Vui lòng nhập số lượng sản phẩm";
+                    $errors['quantity_error'] = $quantity_error;
+                } elseif ($quantity < 0) {
+                    $quantity_error = "Số lượng sản phẩm phải lớn hơn 0";
+                    $errors['quantity_error'] = $quantity_error;
+                } elseif (!is_numeric($quantity)) {
+                    $quantity_error = "Số lượng sản phẩm phải là số";
+                    $errors['quantity_error'] = $quantity_error;
+                }
+                if(empty($description)){
+                    $description_error = "Vui lòng nhập mô tả sản phẩm";
+                    $errors['description_error'] = $description_error;
+                }
+                if (empty($status) && $status != 0) {
+                    $status_error = "Vui lòng chọn trạng thái";
+                    $errors['status_error'] = $status_error;
+                }
+                $checkName = $this->_productModel->checkName($name);
+                if ($checkName) {
+                    $name_error = "Tên sản phẩm đã tồn tại";
+                    $errors['name_error'] = $name_error;
+                }
+                if (isset($errors)) {
+                    $errors['category_id_old'] = $category_id;
+                    $errors['name_old'] = $name;
+                    $errors['price_old'] = $price;
+                    $errors['quantity_old'] = $quantity;
+                    $errors['description_old'] = $description;
+                    $errors['featured_old'] = $featured;
+                    $errors['status_old'] = $status;
+                    $errors['image_old'] = $image;
+                    $mess_error = "Đã có lỗi xảy ra. Vui lòng kiểm tra lại thông tin";
+                    $errors['message'] = $mess_error;
+                    $_SESSION['errors'] = $errors;
+                    header('location: ?page=product&action=create');
+                    exit;
+                }
+            }
+        endif;
+
+        $result = $this->_productModel->insert($data);
+        if ($result) {
+            move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
+            $success = 'Thêm thành công';
+            $_SESSION['success'] = $success;
             header('location: ?page=product&action=index');
             exit;
-        }
-
-        // kiểm tra các trường dữ liệu không được trống
-        // $name = isset($_POST['name']) ? $_POST['name'] : '';
-        $name   = $_POST['name'] ?? '';
-        $status = $_POST['status'] ?? '';
-
-        $error = FALSE;
-
-        if ($error){
+        } else {
+            $errors['message'] = 'Thêm thất bại. Có lỗi xảy ra khi thao tác với cơ sở dữ liệu';
+            $_SESSION['errors'] = $errors;
+            var_dump($_SESSION['errors']);
             header('location: ?page=product&action=create');
             exit;
         }
-        // kết thúc kiểm tra
 
-        // thêm vào cơ sở dữ liệu
-        // dữ liệu để thêm: $name, $status
-        $data = [
-            'name'   => $name,
-            'status' => $status
-        ];
-
-        // gọi model
-        $result = $this->_productModel->insert($data);
-
-        // var_dump($result);
-        if ($result){
-            // Lưu session thêm thành công
-            // Chuyển về trang danh sách
-            header('location: ?page=product&action=index');
-            exit;
-        }
-
-        // Lưu session thêm thất bại
-        header('location: ?page=product&action=create');
-
-        // Chuyển về trang danh sách danh mục
     }
 
     /**

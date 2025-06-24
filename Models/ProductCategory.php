@@ -37,6 +37,10 @@ class ProductCategory{
      * @return array Mảng kết quả các bản ghi
      */
     public function getAll(int $start = 0, int $end = 30){
+        $data = [
+            'start' => $start,
+            'end'   => $end,
+        ];
         // require_once 'Models/Connect.php';
         $sql = "SELECT * FROM $this->_table LIMIT :start, :end";
 
@@ -61,7 +65,7 @@ class ProductCategory{
      *
      * @return array Mảng kết quả các bản ghi
      */
-    public function getAllByStatus($status = '1'){
+    public function getAllByStatus($status = 'Hiển thị'){
         $sql = "SELECT * FROM $this->_table WHERE status=:status";
 
         $stmt = $this->_conn->prepare($sql);
@@ -108,8 +112,16 @@ class ProductCategory{
      */
     public function insert($data){
         try{
-            $sql    = "INSERT INTO $this->_table (name, status) VALUES (:name, :status)";
+            $sql  = "INSERT INTO $this->_table (name, status, description, image, created_at, updated_at) VALUES (:name, :status, :description, :image, :created_at, :updated_at)";
             $stmt   = $this->_conn->prepare($sql);
+            $data = [
+                'name'        => $data['name'],
+                'status'      => $data['status'],
+                'description' => $data['description'] ?? '',
+                'image'       => $data['image'] ?? '',
+                'created_at'  => date('Y-m-d H:i:s'),
+                'updated_at'  => date('Y-m-d H:i:s'),
+            ];
             $result = $stmt->execute($data);
 
             return $result;
@@ -130,7 +142,7 @@ class ProductCategory{
      */
     public function update(int $id, array $data){
         try{
-            $sql  = "UPDATE $this->_table SET name=:name,status=:status WHERE id=:id";
+            $sql = "UPDATE $this->_table SET name=:name,status=:status,description=:description,image=:image WHERE id=:id";
             $stmt = $this->_conn->prepare($sql);
 
             $result = $stmt->execute($data);
@@ -141,6 +153,8 @@ class ProductCategory{
         catch (PDOException $e){
             // ghi log
             var_dump($e->getMessage());
+
+            return FALSE;
         }
     }
 
@@ -167,5 +181,39 @@ class ProductCategory{
             // echo '<pre>';
             var_dump($e);
         }
+    }
+
+    // In Models/ProductCategory.php
+
+    public function checkName($name, $excludeId = NULL){
+        $sql    = "SELECT COUNT(*) FROM $this->_table WHERE name = :name";
+        $params = ['name' => $name];
+
+        if ($excludeId !== NULL){
+            $sql          .= " AND id != :id";
+            $params['id'] = $excludeId;
+        }
+
+        $stmt = $this->_conn->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchColumn() > 0;
+    }
+
+
+    // Add this to Models/ProductCategory.php
+
+    public function checkImage($image){
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $maxSize      = 2 * 1024 * 1024; // 2MB
+
+        if (!in_array($image['type'], $allowedTypes)){
+            return FALSE;
+        }
+        if ($image['size'] > $maxSize){
+            return FALSE;
+        }
+
+        return TRUE;
     }
 }
