@@ -2,7 +2,7 @@
 session_start();
 
 // if (!isset($_SESSION['admin_username'])) {
-//     header('location: index.php');
+//     header('location: dashboard.php');
 //     exit;
 // }
 
@@ -253,7 +253,7 @@ switch ($page){
         }
         break;
     default:
-        echo 'Day la trang chu';
+        include 'Views/Admin/Layouts/dashboard.php';
 }
 
 require_once 'Views/Admin/Layouts/footer.php';
