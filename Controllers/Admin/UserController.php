@@ -123,8 +123,7 @@ class UserController
     /**
      * Xoá người dùng.
      */
-    public
-    function delete()
+    public function delete()
     {
         $id = $_GET['id'] ?? '';
 
@@ -132,6 +131,15 @@ class UserController
             $_SESSION['error'] = 'ID không hợp lệ';
             header('location: ?page=user&action=index');
             exit;
+        }
+
+        // Get user info to find avatar
+        $result = $this->_userModel->getOne($id);
+        if ($result && !empty($user['avatar'])){
+            $avatarPath = 'Uploads/Avatars/' . $result['avatar'];
+            if (file_exists($avatarPath)){
+                unlink($avatarPath);
+            }
         }
 
         $result = $this->_userModel->delete($id);
