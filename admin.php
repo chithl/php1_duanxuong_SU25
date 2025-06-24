@@ -5,7 +5,10 @@ session_start();
 //     header('location: dashboard.php');
 //     exit;
 // }
-
+//if (!isset($_SESSION['admin']) && empty($_SESSION['admin'])) {
+//    header('Location: admin.php?page=auth&action=login');
+//    exit();
+//}
 
 $page   = isset($_GET['page']) ? $_GET['page'] : '';
 $action = isset($_GET['action']) ? $_GET['action'] : '';
@@ -20,6 +23,12 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
 // update: thực hiện lưu trữ (cập nhật)
 // delete: thực hiện xoá
 // show: hiển thị chi tiết (tuỳ chọn)
+if ($page === 'product' && $action === 'search'){
+    require 'Controllers/Admin/ProductController.php';
+    $product = new ProductController;
+    $product->search();
+    exit;
+}
 require_once 'config.php';
 require_once 'Views/Admin/Layouts/header.php';
 
@@ -61,6 +70,32 @@ switch ($page){
                 // echo 'Danh sach';
                 $blogCategoryControl->index();
                 break;
+        }
+        break;
+    case'auth':
+        require_once 'Controllers/Admin/AuthController.php';
+        $authControl = new AuthController();
+        switch ($action){
+            case 'login':
+                // thực hiện gọi controller tương ứng
+                $authControl->login();
+                break;
+            case 'logout':
+                $authControl->logout();
+                break;
+            case 'forgotPassword':
+                $authControl->forgotPassword();
+                break;
+            case 'storeForgotPassword':
+                $authControl->storeForgotPassword();
+                break;
+            case 'resetPassword':
+                $authControl->resetPassword();
+                break;
+            case 'storeResetPassword':
+                $authControl->storeResetPassword();
+                break;
+
         }
         break;
     case 'product-category':
