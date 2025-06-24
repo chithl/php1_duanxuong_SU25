@@ -81,19 +81,19 @@ class User{
      *
      * @return array|false Mảng thông tin user hoặc false nếu không tìm thấy
      */
-    public function getOne(int $id){
+    public function getOne($id){
         $sql = "SELECT * FROM $this->_table WHERE id=:id";
 
         $stmt = $this->_conn->prepare($sql);
 
         // do id là int nên dùng bindParam
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-        $stmt->execute();
 
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->execute(['id' => $id]);
 
-        return $result;
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+
+
     }
 
     /**
@@ -103,19 +103,19 @@ class User{
      *
      * @return bool|null True nếu thành công, null nếu thất bại
      */
-    public function insert($data){
-        try{
-            $sql    = "INSERT INTO $this->_table (name, status) VALUES (:name, :status)";
-            $stmt   = $this->_conn->prepare($sql);
-            $result = $stmt->execute($data);
-
-            return $result;
-        }
-        catch (PDOException $e){
-            // ghi log
-            var_dump($e->getMessage());
-        }
-    }
+//    public function insert($data){
+//        try{
+//            $sql    = "INSERT INTO $this->_table (name, status) VALUES (:name, :status)";
+//            $stmt   = $this->_conn->prepare($sql);
+//            $result = $stmt->execute($data);
+//
+//            return $result;
+//        }
+//        catch (PDOException $e){
+//            // ghi log
+//            var_dump($e->getMessage());
+//        }
+//    }
 
     /**
      * Cập nhật thông tin một bản ghi theo id.
@@ -127,7 +127,7 @@ class User{
      */
     public function update(int $id, array $data){
         try{
-            $sql  = "UPDATE $this->_table SET name=:name,status=:status WHERE id=:id";
+            $sql  = "UPDATE $this->_table SET status=:status WHERE id=:id";
             $stmt = $this->_conn->prepare($sql);
 
             $result = $stmt->execute($data);

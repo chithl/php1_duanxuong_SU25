@@ -187,11 +187,8 @@ switch ($page){
                 // thực hiện gọi controller tương ứng
                 $userControl->index();
                 break;
-            case 'create':
-                $userControl->create();
-                break;
-            case 'store':
-                $userControl->store();
+            case 'detail':
+                $userControl->detail();
                 break;
             case 'edit':
                 $userControl->edit();
