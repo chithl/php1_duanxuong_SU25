@@ -29,8 +29,8 @@ class Product{
     }
 
     public function getCategories(){
-        $sql  = "SELECT * FROM product_categories";
-        $stmt = $this->_conn->query($sql);
+        $sql    = "SELECT * FROM product_categories";
+        $stmt   = $this->_conn->query($sql);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
@@ -135,7 +135,7 @@ class Product{
      */
     public function insert($data){
         try{
-            $sql = "INSERT INTO $this->_table (product_category_id,name,description,weight,price,discount_price,view,stock,image,is_featured) VALUES (:product_category_id,:name,:description,:weight,:price,:discount_price,:view,:stock,:image,:is_featured)";
+            $sql    = "INSERT INTO $this->_table (product_category_id,name,description,weight,price,discount_price,view,stock,image,is_featured) VALUES (:product_category_id,:name,:description,:weight,:price,:discount_price,:view,:stock,:image,:is_featured)";
             $stmt   = $this->_conn->prepare($sql);
             $result = $stmt->execute($data);
 
@@ -183,7 +183,7 @@ class Product{
      */
     public function update(array $data){
         try{
-            $sql = "UPDATE $this->_table SET name=:name,product_category_id=:product_category_id,description=:description,price=:price,weight=:weight,discount_price=:discount_price,stock=:stock,image=:image,is_featured=:is_featured ,status=:status WHERE id=:id";
+            $sql  = "UPDATE $this->_table SET name=:name,product_category_id=:product_category_id,description=:description,price=:price,weight=:weight,discount_price=:discount_price,stock=:stock,image=:image,is_featured=:is_featured ,status=:status WHERE id=:id";
             $stmt = $this->_conn->prepare($sql);
 
             $result = $stmt->execute($data);

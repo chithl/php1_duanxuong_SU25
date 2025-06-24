@@ -283,7 +283,7 @@ class ProductController{
         if (isset($_POST["create"])):
             $category_id = $_POST['category_id'] ?? '';
             if ($_FILES['image']['error'] === UPLOAD_ERR_NO_FILE){
-                $image_error = "Vui lòng chọn file để upload";
+                $image_error           = "Vui lòng chọn file để upload";
                 $errors['image_error'] = $image_error;
             }else{
                 $target_dir = "Uploads/Products/";
@@ -300,33 +300,33 @@ class ProductController{
                 $target_file = $target_dir . $new_name;
             }
             if (isset($_POST["name"]) && isset($_POST["price"])){
-                $category_id                = trim(htmlspecialchars($_POST['category_id']));
-                $name                       = trim(htmlspecialchars($_POST["name"]));
-                $description                = trim(htmlspecialchars($_POST["description"]));
-                $price                      = trim(htmlspecialchars($_POST["price"]));
-                $is_featured                = trim(htmlspecialchars($_POST['featured']));
-                $weight                     = trim(htmlspecialchars($_POST["weight"]));
-                $discount_price             = trim(htmlspecialchars($_POST["discount_price"]));
-                $view                       = trim(htmlspecialchars($_POST["view"])) ?? 0;
-                $stock                      = trim(htmlspecialchars($_POST["stock"]));
-                $image                      = (isset($new_name)) ? $new_name : '';
+                $category_id    = trim(htmlspecialchars($_POST['category_id']));
+                $name           = trim(htmlspecialchars($_POST["name"]));
+                $description    = trim(htmlspecialchars($_POST["description"]));
+                $price          = trim(htmlspecialchars($_POST["price"]));
+                $is_featured    = trim(htmlspecialchars($_POST['featured']));
+                $weight         = trim(htmlspecialchars($_POST["weight"]));
+                $discount_price = trim(htmlspecialchars($_POST["discount_price"]));
+                $view           = trim(htmlspecialchars($_POST["view"])) ?? 0;
+                $stock          = trim(htmlspecialchars($_POST["stock"]));
+                $image          = (isset($new_name)) ? $new_name : '';
 
                 if (empty($category_id)){
-                    $category_id_error = "Vui lòng chọn mã loại sản phẩm";
+                    $category_id_error           = "Vui lòng chọn mã loại sản phẩm";
                     $errors['category_id_error'] = $category_id_error;
                 }
                 if (empty($name)){
-                    $name_error = "Vui lòng nhập tên sản phẩm";
+                    $name_error           = "Vui lòng nhập tên sản phẩm";
                     $errors['name_error'] = $name_error;
                 }
                 if (empty($price)){
-                    $price_error = "Vui lòng nhập giá sản phẩm";
+                    $price_error           = "Vui lòng nhập giá sản phẩm";
                     $errors['price_error'] = $price_error;
                 }elseif ($price < 0){
-                    $price_error = "Giá sản phẩm phải lớn hơn 0";
+                    $price_error           = "Giá sản phẩm phải lớn hơn 0";
                     $errors['price_error'] = $price_error;
                 }elseif (!is_numeric($price)){
-                    $price_error = "Giá sản phẩm phải là số";
+                    $price_error           = "Giá sản phẩm phải là số";
                     $errors['price_error'] = $price_error;
                 }
                 if (empty($weight)){
@@ -340,7 +340,7 @@ class ProductController{
                     $errors['weight_error'] = $weight_error;
                 }
                 if (empty($is_featured) && $is_featured != '0' && $is_featured != '1'){
-                    $featured_error = "Vui lòng nhập đặc trưng sản phẩm";
+                    $featured_error           = "Vui lòng nhập đặc trưng sản phẩm";
                     $errors['featured_error'] = $featured_error;
                 }
                 if (empty($stock)){
@@ -354,7 +354,7 @@ class ProductController{
                     $errors['stock_error'] = $stock_error;
                 }
                 if (empty($description)){
-                    $description_error = "Vui lòng nhập mô tả sản phẩm";
+                    $description_error           = "Vui lòng nhập mô tả sản phẩm";
                     $errors['description_error'] = $description_error;
                 }
                 if (empty($discount_price)){
@@ -381,27 +381,27 @@ class ProductController{
 
                 $checkName = $this->_productModel->checkName($name);
                 if ($checkName){
-                    $name_error = "Tên sản phẩm đã tồn tại";
+                    $name_error           = "Tên sản phẩm đã tồn tại";
                     $errors['name_error'] = $name_error;
                 }
                 if (isset($errors)){
                     $errors['category_id_old'] = $category_id;
-                    $errors['name_old']     = $name;
-                    $errors['price_old']    = $price;
-                    $errors['weight_old']   = $weight;
-                    $errors['stock_old']    = $stock;
+                    $errors['name_old']        = $name;
+                    $errors['price_old']       = $price;
+                    $errors['weight_old']      = $weight;
+                    $errors['stock_old']       = $stock;
                     $errors['description_old'] = $description;
-                    $errors['featured_old'] = $is_featured;
-                    $errors['image_old']    = $image;
-                    $mess_error             = "Đã có lỗi xảy ra. Vui lòng kiểm tra lại thông tin";
-                    $errors['message']      = $mess_error;
-                    $_SESSION['errors']     = $errors;
+                    $errors['featured_old']    = $is_featured;
+                    $errors['image_old']       = $image;
+                    $mess_error                = "Đã có lỗi xảy ra. Vui lòng kiểm tra lại thông tin";
+                    $errors['message']         = $mess_error;
+                    $_SESSION['errors']        = $errors;
                     header('location: ?page=product&action=create');
                     exit;
                 }
             }
         endif;
-        $data = [
+        $data   = [
             'product_category_id' => $category_id,
             'name'                => $name,
             'description'         => $description,
@@ -416,12 +416,12 @@ class ProductController{
         $result = $this->_productModel->insert($data);
         if ($result){
             move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
-            $success = 'Thêm thành công';
+            $success             = 'Thêm thành công';
             $_SESSION['success'] = $success;
             header('location: ?page=product&action=index');
             exit;
         }else{
-            $errors['message'] = 'Thêm thất bại. Có lỗi xảy ra khi thao tác với cơ sở dữ liệu';
+            $errors['message']  = 'Thêm thất bại. Có lỗi xảy ra khi thao tác với cơ sở dữ liệu';
             $_SESSION['errors'] = $errors;
             var_dump($_SESSION['errors']);
             header('location: ?page=product&action=create');

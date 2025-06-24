@@ -7,12 +7,12 @@
 	<!-- ============================================================== -->
 	<div class="page-breadcrumb">
         <?php if (isset($_SESSION['errors']) && !empty($_SESSION['errors'])): ?>
-	        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-		        <strong><?= $_SESSION['errors']['message'] ?? "" ?></strong>
-	        </div>
-	        <script>
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong><?= $_SESSION['errors']['message'] ?? "" ?></strong>
+			</div>
+			<script>
                 $(".alert").alert();
-	        </script>
+			</script>
         <?php endif; ?>
 		<div class="row">
 			<div class="col-12 d-flex no-block align-items-center">
@@ -53,10 +53,10 @@
 									<select class="form-control" name="category_id" id="category_id">
 										<option value="">Vui lòng chọn ...</option>
                                         <?php foreach ($categories as $cate): ?>
-	                                        <option value="<?= $cate['id'] ?>"
+											<option value="<?= $cate['id'] ?>"
                                                 <?= (isset($_SESSION['errors']['category_id_old']) && $_SESSION['errors']['category_id_old'] == $cate['id']) ? 'selected' : '' ?>>
                                                 <?= $cate['id'] ?>--<?= $cate['name'] ?>
-	                                        </option>
+											</option>
                                         <?php endforeach; ?>
 									</select>
 									<small id="helpId" class="text-danger"><?= $_SESSION['errors']['category_id_error'] ?? "" ?></small>

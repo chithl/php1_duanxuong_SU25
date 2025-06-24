@@ -81,7 +81,7 @@
 								<label for="description" class="col-sm-3 text-end control-label col-form-label">Mô
 									tả</label>
 								<div class="col-sm-9">
-									<textarea class="form-control" name="description" id="description" placeholder="Nhập mô tả ..." rows="3"><?= $_SESSION['errors']['description_old'] ?? $result['description'] ?></textarea>
+                                            <textarea class="form-control" name="description" id="description" placeholder="Nhập mô tả ..." rows="3"><?= $_SESSION['errors']['description_old'] ?? $result['description'] ?></textarea>
 									<small id="helpId" class="text-danger"><?= $_SESSION['errors']['description_error'] ?? "" ?></small>
 								</div>
 							</div>
