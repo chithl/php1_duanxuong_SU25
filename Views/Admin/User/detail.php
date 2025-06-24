@@ -71,11 +71,15 @@
                             </tr>
                             <tr>
                                 <th>Ngày tạo</th>
-                                <td><?= $result['created_at'] ?></td>
+                                <td>
+                                    <?= !empty($result['created_at']) ? date('d/m/Y H:i:s', strtotime($result['created_at'])) : '<i>Không có</i>' ?>
+                                </td>
                             </tr>
                             <tr>
                                 <th>Ngày cập nhật</th>
-                                <td><?= $result['updated_at'] ?></td>
+                                <td>
+                                    <?= !empty($result['updated_at']) ? date('d/m/Y H:i:s', strtotime($result['updated_at'])) : '<i>Không có</i>' ?>
+                                </td>
                             </tr>
                         </table>
                         <a href="?page=user" class="btn btn-secondary">Quay lại danh sách</a>
