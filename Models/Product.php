@@ -27,7 +27,13 @@ class Product{
         $db          = new Database;
         $this->_conn = $db->getConnection();
     }
-
+    public function getCategories ()
+    {
+        $sql = "SELECT * FROM product_categories";
+        $stmt = $this->_conn->query($sql);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
     /**
      * Lấy tất cả dữ liệu từ bảng products với phân trang.
      *
