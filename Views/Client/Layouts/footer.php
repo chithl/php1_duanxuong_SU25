@@ -78,9 +78,10 @@
 <!-- Các plugin JavaScript -->
 <script src="Assets/Client/js/jquery-3.3.1.min.js"></script>
 <script src="Assets/Client/js/bootstrap.min.js"></script>
-<script src="Assets/Client/js/jquery.nice-select.min.js"></script>
+<!--<script src="Assets/Client/js/jquery.nice-select.min.js"></script>-->
 <script src="Assets/Client/js/jquery-ui.min.js"></script>
 <script src="Assets/Client/js/jquery.slicknav.js"></script>
 <script src="Assets/Client/js/mixitup.min.js"></script>
 <script src="Assets/Client/js/owl.carousel.min.js"></script>
 <script src="Assets/Client/js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

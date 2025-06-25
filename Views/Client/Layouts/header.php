@@ -16,7 +16,7 @@
 	<link rel="stylesheet" href="Assets/Client/css/bootstrap.min.css" type="text/css">
 	<link rel="stylesheet" href="Assets/Client/css/font-awesome.min.css" type="text/css">
 	<link rel="stylesheet" href="Assets/Client/css/elegant-icons.css" type="text/css">
-	<link rel="stylesheet" href="Assets/Client/css/nice-select.css" type="text/css">
+<!--	<link rel="stylesheet" href="Assets/Client/css/nice-select.css" type="text/css">-->
 	<link rel="stylesheet" href="Assets/Client/css/jquery-ui.min.css" type="text/css">
 	<link rel="stylesheet" href="Assets/Client/css/owl.carousel.min.css" type="text/css">
 	<link rel="stylesheet" href="Assets/Client/css/slicknav.min.css" type="text/css">
@@ -27,6 +27,7 @@
 	<link rel="stylesheet" href="Assets/Client/css/reset-password.css" type="text/css">
 	<link rel="stylesheet" href="Assets/Client/css/profile.css" type="text/css">
 	<link rel="stylesheet" href="Assets/Client/css/about.css" type="text/css">
+	<link rel="stylesheet" href="Assets/Client/css/checkout.css" type="text/css">
 
 </head>
 
@@ -69,7 +70,7 @@
 				<nav class="header__menu">
 					<ul>
 						<li class="active"><a href="index.php">Trang chủ</a></li>
-						<li><a href="?page=product-list">Danh sách</a></li>
+						<li><a href="?page=product-list">Sản phẩm</a></li>
 						<!--                        <li><a href="#">Pages</a>-->
 						<!--                            <ul class="header__menu__dropdown">-->
 						<!--                                <li><a href="./shop-details.html">Shop Details</a></li>-->
