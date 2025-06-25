@@ -34,12 +34,15 @@ class AuthController{
 
     public function handleLogin()
     {
-//        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         $this->_userModel = new User();
-//        if(!isset($_POST['login'])) {
-//            header('location: ?page=login&action=index');
-//            exit;
-//        }
+        if (!isset($_POST['login'])) {
+            header('location: ?page=login&action=index');
+            exit;
+        }
 
         $username = $_POST['username'] ?? '';
         $password = $_POST['password'] ?? '';
@@ -84,22 +87,20 @@ class AuthController{
         }
 
         if (!empty($errors)) {
-            var_dump($errors);
-//            $_SESSION['errors'] = $errors;
-//            header('location: ?page=login&action=index');
+            $_SESSION['errors'] = $errors;
+            $_SESSION["old_data"] = $_POST;
+            header('location: ?page=login&action=index');
             exit;
         }
 
         if ($user) {
-            echo 'Đăng nhập thành công.';
-//            $_SESSION['login'] = $user;
-//            $_SESSION['success'] = 'Đăng nhập thành công.';
-//            header('location: index.php');
+            $_SESSION['login'] = $user;
+            header('location: index.php');
             exit;
         }
 
-//        header('location: ?page=register&action=index');
-//        exit;
+        header('location: ?page=login&action=index');
+        exit;
     }
 
     /**
@@ -113,12 +114,15 @@ class AuthController{
 
     public function handleRegister()
     {
-//        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         $this->_userModel = new User();
-//        if(!isset($_POST['register'])) {
-////            header('location: ?page=register&action=index');
-////            exit;
-//        }
+        if (!isset($_POST['register'])) {
+            header('location: ?page=register&action=index');
+            exit;
+        }
 
         $username = $_POST['username'] ?? '';
         $password = $_POST['password'] ?? '';
@@ -205,10 +209,9 @@ class AuthController{
         }
 
         if (!empty($errors)) {
-            var_dump($errors);
-//            $_SESSION['errors'] = $errors;
-//            $_SESSION['old_data'] = $_POST;
-//            header('location: ?page=register&action=index');
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old_data'] = $_POST;
+            header('location: ?page=register&action=index');
             exit;
         }
 
@@ -224,14 +227,12 @@ class AuthController{
         $result = $this->_userModel->insert($username, $password, $email, $phone, $birth, $avatar_name);
 
         if ($result) {
-            echo 'Đăng ký tài khoản thành công.';
-//            $_SESSION['success'] = 'Đăng ký tài khoản thành công.';
-//            header('location: ?page=login&action=index');
+            header('location: ?page=login&action=index');
             exit;
         }
 
-//        header('location: ?page=register&action=index');
-//        exit;
+        header('location: ?page=register&action=index');
+        exit;
     }
 
     /**
@@ -240,6 +241,13 @@ class AuthController{
      * Nạp giao diện thông tin cá nhân cho người dùng.
      */
     public function profile(){
+        $this->_userModel = new User();
+        $id = $_GET["id"] ?? "";
+        if ($id == "") {
+            header("Location: index.php");
+            exit;
+        }
+        $user = $this->_userModel->getUserById($id);
         include 'Views/Client/Auth/profile.php';
     }
 
@@ -254,12 +262,15 @@ class AuthController{
 
     public function handleForgotPassword()
     {
-//        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         $this->_userModel = new User();
-//        if(!isset($_POST['login'])) {
-//            header('location: ?page=login&action=index');
-//            exit;
-//        }
+        if (!isset($_POST['forgot-password'])) {
+            header('location: ?page=forgot-password&action=index');
+            exit;
+        }
 
         $username = $_POST['username'] ?? '';
         $email = $_POST['email'] ?? '';
@@ -295,24 +306,22 @@ class AuthController{
         }
 
         if (!empty($errors)) {
-            var_dump($errors);
-//            $_SESSION['errors'] = $errors;
-//            header('location: ?page=login&action=index');
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old_data'] = $_POST;
+            header('location: ?page=forgot-password&action=index');
             exit;
         }
 
         $result = $this->_userModel->resetToken($username, $email);
 
         if ($result) {
-            echo 'Gửi mã thành công.';
-//            $_SESSION['login'] = $user;
-//            $_SESSION['success'] = 'Đăng nhập thành công.';
-//            header('location: index.php');
+            $_SESSION['success'] = 'Gửi mã thành thành công.';
+            header('location: ?page=reset-password&action=index');
             exit;
         }
 
-//        header('location: ?page=register&action=index');
-//        exit;
+        header('location: ?page=forgot-password&action=index');
+        exit;
     }
 
     /**
@@ -335,12 +344,15 @@ class AuthController{
 
     public function handleResetPassword()
     {
-        //        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         $this->_userModel = new User();
-//        if(!isset($_POST['login'])) {
-//            header('location: ?page=login&action=index');
-//            exit;
-//        }
+        if (!isset($_POST['reset-password'])) {
+            header('location: ?page=reset-password&action=index');
+            exit;
+        }
 
         $username = $_POST['username'] ?? '';
         $token = $_POST['reset_token'] ?? '';
@@ -409,24 +421,21 @@ class AuthController{
         }
 
         if (!empty($errors)) {
-            var_dump($errors);
-//            $_SESSION['errors'] = $errors;
-//            header('location: ?page=login&action=index');
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old_data'] = $_POST;
+            header('location: ?page=reset-password&action=index');
             exit;
         }
 
         $result = $this->_userModel->resetPassword($username, $token, $newPassword);
 
         if ($result) {
-            echo 'Đổi mật khẩu thành công.';
-//            $_SESSION['login'] = $user;
-//            $_SESSION['success'] = 'Đăng nhập thành công.';
-//            header('location: index.php');
+            header('location: ?page=login&action=index');
             exit;
         }
 
-//        header('location: ?page=register&action=index');
-//        exit;
+        header('location: ?page=reset-password&action=index');
+        exit;
     }
     /**
      * Xử lý đăng xuất người dùng.

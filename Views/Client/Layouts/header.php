@@ -50,10 +50,16 @@
 					<div class="header__top__right">
 
 
-						<div class="header__top__right__auth">
-							<a href="?page=login"><i class="fa fa-user"></i> Đăng nhập</a>
-						</div>
-					</div>
+                        <div class="header__top__right__auth">
+                            <?php if (isset($_SESSION['login'])): ?>
+                                <span><a href="?page=profile&id=<?= htmlspecialchars($_SESSION['login']['id']) ?>"><i
+                                                class="fa fa-user"></i> <?= htmlspecialchars($_SESSION['login']['username']) ?></a></span>
+                                <a href="?page=logout">Đăng xuất</a>
+                            <?php else: ?>
+                                <a href="?page=login&action=index"><i class="fa fa-user"></i> Đăng nhập</a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>

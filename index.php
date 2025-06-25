@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 
 
@@ -142,3 +143,4 @@ switch ($page) {
 }
 
 require_once 'Views/Client/Layouts/footer.php';
+ob_end_flush();
