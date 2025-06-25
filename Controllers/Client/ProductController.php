@@ -28,36 +28,6 @@ class ProductController{
      * Nạp giao diện danh sách sản phẩm cho người dùng.
      */
     public function productList(){
-        $products = [
-            [
-                'id'          => 1,
-                'name'        => 'San pham 1',
-                'price'       => 1000000,
-                'description' => 'Mo ta san phan',
-                'image'       => 'product1.jpg',
-                'status'      => 1,
-                'is_feature'  => 1
-            ],
-            [
-                'id'          => 2,
-                'name'        => 'San pham 2',
-                'price'       => 1000000,
-                'description' => 'Mo ta san phan',
-                'image'       => 'product2.jpg',
-                'status'      => 1,
-                'is_feature'  => 1
-            ],
-            [
-                'id'          => 3,
-                'name'        => 'San pham 3',
-                'price'       => 1000000,
-                'description' => 'Mo ta san phan',
-                'image'       => 'product3.jpg',
-                'status'      => 1,
-                'is_feature'  => 1
-            ],
-        ];
-
         include 'Views/Client/Product/index.php';
     }
 

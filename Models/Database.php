@@ -25,8 +25,6 @@ class Database{
         catch (PDOException $e){
             echo "Connection failed: " . $e->getMessage();
         }
-
-
     }
 
     public function disconnect(){
