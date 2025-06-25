@@ -28,7 +28,14 @@ class OrderController{
      * Lấy tất cả đơn hàng và nạp giao diện danh sách cho người dùng.
      */
     public function index(){
-        $result = $this->_orderModel->getAll();
+        $payment_status  = $_GET['payment_status'] ?? '';
+        $keyword = $_GET['keyword'] ?? '';
+
+        if ($payment_status === ''){
+            $result = $this->_orderModel->getAll();
+        }else{
+            $result = $this->_orderModel->getAllByStatus($payment_status);
+        }
         // hiển thị danh sách danh mục cho người dùng
         include 'Views/Admin/Order/index.php';
     }
@@ -87,8 +94,7 @@ class OrderController{
         // nếu thành công => chuyển sang trang danh sách và thông báo
         if ($result){
             header('location: ?page=order');
-        }
-        else{
+        }else{
             header('location: ?page=order&action=edit&id=' . $id);
         }
         // nếu thất bại thì chuyển sang trang edit
@@ -113,61 +119,7 @@ class OrderController{
      * Chuyển hướng về trang danh sách hoặc trang thêm tuỳ theo kết quả.
      */
     public function store(){
-        // bắt đầu kiểm tra, bắt lỗi client và admin
-        // kiểm tra có $_POST create không ?
 
-        if (!isset($_POST['create'])){
-            header('location: ?page=order&action=index');
-            exit;
-        }
-
-        // kiểm tra các trường dữ liệu không được trống
-        // $name = isset($_POST['name']) ? $_POST['name'] : '';
-        $name   = $_POST['name'] ?? '';
-        $status = $_POST['status'] ?? '';
-
-        // bắt trùng
-        // getByName($name) nếu trả mảng rỗng => insert
-        // nếu ko báo lỗi trùng name
-
-        // lưu session lỗi
-        $error = FALSE;
-        if ($name == ''){
-            // echo 'Chưa nhập';
-            $error_name_message = '';
-            $error_name_value   = '';
-            $error              = TRUE;
-        }
-
-        if ($error){
-            header('location: ?page=order&action=create');
-            exit;
-        }
-        // kết thúc kiểm tra
-
-        // thêm vào cơ sở dữ liệu
-        // dữ liệu để thêm: $name, $status
-
-        $data = [
-            'name'   => $name,
-            'status' => $status
-        ];
-        // gọi model
-        $result = $this->_orderModel->insert($data);
-
-        // var_dump($result);
-        if ($result){
-            // Lưu session thêm thành công
-            // Chuyển về trang danh sách
-            header('location: ?page=order&action=index');
-            exit;
-        }
-
-        // Lưu session thêm thất bại
-        header('location: ?page=order&action=create');
-
-
-        // Chuyển về trang danh sách danh mục
     }
 
     /**
@@ -188,10 +140,54 @@ class OrderController{
         if ($result){
             // thành công
 
-        }
-        else{
+        }else{
             // thất bại
         }
         header('location: ?page=order&action=index');
+    }
+
+    public function detail(){
+        // hiển thị chi tiết đơn hàng
+        $id = $_GET['id'] ?? '';
+
+        if ($id == ''){
+            header('location: ?page=order&action=index');
+            exit;
+        }
+
+        $order        = $this->_orderModel->getOne($id);
+        $orderDetails = $this->_orderModel->getOrderDetails($id);
+
+        // nếu không có dữ liệu
+        if (!$order){
+            header('location: ?page=order&action=index');
+            exit;
+        }
+
+        // nếu tìm thấy
+        include 'Views/Admin/Order/orderDetail.php';
+    }
+
+    public function updateStatus(){
+        $id              = $_POST['id'] ?? NULL;
+        $payment_status  = $_POST['payment_status'] ?? NULL;
+        $shipping_status = $_POST['shipping_status'] ?? NULL;
+
+        if ($id === NULL){
+            $_SESSION['error'] = 'Thiếu ID đơn hàng';
+            header('Location: ?page=order&action=index&status=');
+
+            return;
+        }
+
+        $updated = $this->_orderModel->updateStatus((int) $id, $payment_status, $shipping_status);
+
+        if ($updated){
+            $_SESSION['success'] = 'Cập nhật trạng thái thành công';
+        }else{
+            $_SESSION['error'] = 'Cập nhật trạng thái thất bại';
+        }
+
+        header("Location: ?page=order&action=detail&id=$id");
     }
 }

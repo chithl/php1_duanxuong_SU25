@@ -10,7 +10,7 @@ session_start();
 //    exit();
 //}
 
-$page   = isset($_GET['page']) ? $_GET['page'] : '';
+$page = isset($_GET['page']) ? $_GET['page'] : '';
 $action = isset($_GET['action']) ? $_GET['action'] : '';
 
 // Hiển thị danh sách danh mục: ?page=category&action=index
@@ -32,12 +32,12 @@ if ($page === 'product' && $action === 'search'){
 require_once 'config.php';
 require_once 'Views/Admin/Layouts/header.php';
 
-switch ($page){
+switch ($page) {
     case 'blog-category':
         require_once 'Controllers/Admin/BlogCategoryController.php';
         $blogCategoryControl = new BlogCategoryController();
 
-        switch ($action){
+        switch ($action) {
             case 'index':
                 // thực hiện gọi controller tương ứng
                 $blogCategoryControl->index();
@@ -102,7 +102,7 @@ switch ($page){
         require_once 'Controllers/Admin/ProductCategoryController.php';
         $productCategoryControl = new ProductCategoryController();
 
-        switch ($action){
+        switch ($action) {
             case 'index':
                 // thực hiện gọi controller tương ứng
                 $productCategoryControl->index();
@@ -141,7 +141,7 @@ switch ($page){
     case 'product':
         require_once 'Controllers/Admin/ProductController.php';
         $productControl = new ProductController();
-        switch ($action){
+        switch ($action) {
 
             case 'index':
                 // thực hiện gọi controller tương ứng
@@ -179,7 +179,7 @@ switch ($page){
     case 'blog':
         require_once 'Controllers/Admin/BlogController.php';
         $blogControl = new BlogController();
-        switch ($action){
+        switch ($action) {
 
             case 'index':
                 // thực hiện gọi controller tương ứng
@@ -217,7 +217,7 @@ switch ($page){
     case 'user':
         require_once 'Controllers/Admin/UserController.php';
         $userControl = new UserController();
-        switch ($action){
+        switch ($action) {
             case 'index':
                 // thực hiện gọi controller tương ứng
                 $userControl->index();
@@ -244,7 +244,7 @@ switch ($page){
     case 'order':
         require_once 'Controllers/Admin/OrderController.php';
         $orderControl = new OrderController();
-        switch ($action){
+        switch ($action) {
             case 'index':
                 // thực hiện gọi controller tương ứng
                 $orderControl->index();
@@ -264,7 +264,12 @@ switch ($page){
             case 'delete':
                 $orderControl->delete();
                 break;
-
+            case 'detail':
+                $orderControl->detail();
+                break;
+            case 'updateStatus':
+                $orderControl->updateStatus();
+                break;
             default:
                 // hiển thị index (danh sách)
                 $orderControl->index();
