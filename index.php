@@ -1,8 +1,8 @@
 <?php
 session_start();
+ob_start();
 
-
-$page = isset($_GET['page']) ? $_GET['page'] : '';
+$page   = isset($_GET['page']) ? $_GET['page'] : '';
 $action = isset($_GET['action']) ? $_GET['action'] : '';
 
 // Hiển thị danh sách danh mục: ?page=category&action=index
@@ -25,7 +25,11 @@ require_once 'Controllers/Client/HomeController.php';
 $home = new HomeController();
 
 
-switch ($page) {
+switch ($page){
+    case "index":
+        $home->index();
+        break;
+
     case 'product-list':
         require_once 'Controllers/Client/ProductController.php';
         $product = new ProductController();
@@ -43,22 +47,51 @@ switch ($page) {
         $cart = new CartController();
         $cart->cart();
         break;
+
+    case "add-to-cart":
+        require_once 'Controllers/Client/CartController.php';
+        $cart = new CartController();
+        $cart->addProductToCart();
+        break;
+
+    case "product-cart-decrement":
+        require_once 'Controllers/Client/CartController.php';
+        $cart = new CartController();
+        $cart->productCartDecrement();
+        break;
+
+    case "remove-from-cart":
+        require_once 'Controllers/Client/CartController.php';
+        $cart = new CartController();
+        $cart->removeProductFromCart();
+        break;
+
     case 'checkout':
         require_once 'Controllers/Client/CartController.php';
         $cart = new CartController();
         $cart->checkout();
         break;
+
+    case "checkout-action":
+        require_once 'Controllers/Client/CartController.php';
+        $cart = new  CartController();
+        $cart->checkoutAction();
+        break;
+
     case 'contact':
         $home->contact();
         break;
+
     case 'about':
         $home->about();
         break;
+
     case 'blog-list':
         require_once 'Controllers/Client/BlogController.php';
         $blog = new BlogController();
         $blog->blogList();
         break;
+
     case 'blog-detail':
         require_once 'Controllers/Client/BlogController.php';
         $blog = new BlogController();
@@ -66,12 +99,13 @@ switch ($page) {
         break;
 
     case 'login':
-        switch ($action) {
+        switch ($action){
             case 'index':
                 require_once 'Controllers/Client/AuthController.php';
                 $auth = new AuthController();
                 $auth->login();
                 break;
+
             case 'handle':
                 require_once 'Controllers/Client/AuthController.php';
                 $auth = new AuthController();
@@ -79,13 +113,15 @@ switch ($page) {
                 break;
         }
         break;
+
     case 'register':
-        switch ($action) {
+        switch ($action){
             case 'index':
                 require_once 'Controllers/Client/AuthController.php';
                 $auth = new AuthController();
                 $auth->register();
                 break;
+
             case 'handle':
                 require_once 'Controllers/Client/AuthController.php';
                 $auth = new AuthController();
@@ -93,18 +129,21 @@ switch ($page) {
                 break;
         }
         break;
+
     case 'profile':
         require_once 'Controllers/Client/AuthController.php';
         $auth = new AuthController();
         $auth->profile();
         break;
+
     case 'forgot-password':
-        switch ($action) {
+        switch ($action){
             case 'index':
                 require_once 'Controllers/Client/AuthController.php';
                 $auth = new AuthController();
                 $auth->forgotPassword();
                 break;
+
             case 'handle':
                 require_once 'Controllers/Client/AuthController.php';
                 $auth = new AuthController();
@@ -112,18 +151,21 @@ switch ($page) {
                 break;
         }
         break;
+
     case 'change-password':
         require_once 'Controllers/Client/AuthController.php';
         $auth = new AuthController();
         $auth->changePassword();
         break;
+
     case 'reset-password':
-        switch ($action) {
+        switch ($action){
             case 'index':
                 require_once 'Controllers/Client/AuthController.php';
                 $auth = new AuthController();
                 $auth->resetPassword();
                 break;
+
             case 'handle':
                 require_once 'Controllers/Client/AuthController.php';
                 $auth = new AuthController();
@@ -131,6 +173,7 @@ switch ($page) {
                 break;
         }
         break;
+
     case 'logout':
         require_once 'Controllers/Client/AuthController.php';
         $auth = new AuthController();
