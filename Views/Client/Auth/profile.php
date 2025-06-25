@@ -5,10 +5,10 @@
 			<!-- Profile Header -->
 			<div class="profile-header">
 				<div class="avatar-placeholder">
-					<i class="fa fa-user"></i>
+                    <img src="Assets/Client/Images/<?= $user['avatar'] ?>" alt="Avatar" class="profile-avatar"
+                         style="margin-top: 20px; height: 111px;"/>
 				</div>
-				<h2 class="profile-name">Nguyễn Văn An</h2>
-				<p class="profile-role">Khách hàng thường xuyên</p>
+                <h2 class="profile-name"><?= $user['username'] ?></h2>
 			</div>                <!-- Profile Content -->
 			<div class="profile-content">
 				<!-- Profile Info Section -->
@@ -17,46 +17,45 @@
 						<div class="col-md-6">
 							<div class="info-group">
 								<label class="info-label">ID tài khoản</label>
-								<span class="info-value readonly">#USER001</span>
-							</div>
-
-							<div class="info-group">
-								<label class="info-label">Tên người dùng</label>
-								<span class="info-value">nguyenvanan</span>
+                                <span class="info-value readonly"><?= $user['id'] ?></span>
 							</div>
 
 							<div class="info-group">
 								<label class="info-label">Email</label>
-								<span class="info-value">nguyenvanan@gmail.com</span>
+                                <span class="info-value"><?= $user['email'] ?></span>
 							</div>
 
 							<div class="info-group">
 								<label class="info-label">Số điện thoại</label>
-								<span class="info-value">+84 987 654 321</span>
+                                <span class="info-value"><?= $user['phone'] ?></span>
 							</div>
 						</div>
 
 						<div class="col-md-6">
 							<div class="info-group">
 								<label class="info-label">Ngày sinh</label>
-								<span class="info-value">15/03/1990</span>
+                                <span class="info-value"><?= $user['birth'] ?></span>
 							</div>
 
 							<div class="info-group">
 								<label class="info-label">Vai trò</label>
-								<span class="info-value readonly">Khách hàng</span>
+                                <span class="info-value readonly">
+                                    <?php if ($user['role'] === 'admin'): ?>
+                                        Quản trị viên
+                                    <?php elseif ($user['role'] === 'customer'): ?>
+                                        Khách hàng
+                                    <?php else: ?>
+                                        Không xác định
+                                    <?php endif; ?>
+                                </span>
 							</div>
 
 							<div class="info-group">
 								<label class="info-label">Ngày tạo tài khoản</label>
-								<span class="info-value readonly">01/01/2024</span>
+                                <span class="info-value readonly"><?= $user['created_at'] ?></span>
 							</div>
 
-							<div class="info-group">
-								<label class="info-label">Ảnh đại diện</label>
-								<span class="info-value readonly">Chưa cập nhật</span>
-							</div>
-						</div>
+                        </div>
 					</div>
 					<div class="security-info">
 						<h6><i class="fa fa-shield-alt me-2"></i>Bảo mật tài khoản</h6>

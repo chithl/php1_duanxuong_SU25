@@ -51,6 +51,19 @@ class User{
         return $result;
     }
 
+    public function getUserById($id)
+    {
+        $stmt = $this->_conn->prepare("SELECT * FROM users WHERE id = :id");
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            return $result;
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Lấy tất cả bản ghi theo trạng thái.
      *
