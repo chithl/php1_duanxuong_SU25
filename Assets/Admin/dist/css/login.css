@@ -1,0 +1,38 @@
+
+.login-card {
+	background: #fff;
+	border-radius: 20px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+	padding: 40px;
+	transition: 0.3s;
+}
+
+.login-card:hover {
+	transform: scale(1.01);
+	box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.login-card .form-control {
+	border-radius: 10px;
+}
+
+.login-card .btn-info {
+	border-radius: 10px;
+	font-weight: bold;
+}
+
+.login-title {
+	font-size: 28px;
+	font-weight: 700;
+	color: #17a2b8;
+}
+
+.login-subtext {
+	font-size: 14px;
+	color: #888;
+}
+
+.login-icon {
+	font-size: 50px;
+	color: #17a2b8;
+}

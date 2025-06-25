@@ -1,0 +1,171 @@
+/* Register Section Styles */
+.register-section {
+	padding: 100px 0;
+	background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+	min-height: 80vh;
+	display: flex;
+	align-items: center;
+}
+
+.register-container {
+	background: white;
+	border-radius: 15px;
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+	max-width: 600px;
+	margin: 0 auto;
+}
+
+.register-right {
+	padding: 60px 40px;
+	text-align: center;
+}
+
+.register-title {
+	color: #333;
+	font-weight: 700;
+	margin-bottom: 40px;
+	font-size: 2.2rem;
+	text-align: center;
+}
+
+.form-label {
+	font-weight: 600;
+	color: #555;
+	margin-bottom: 8px;
+	text-align: left;
+	display: block;
+}
+.form-control {
+	border: 2px solid #e1e8ed;
+	border-radius: 10px;
+	padding: 15px 20px;
+	font-size: 16px;
+	margin-bottom: 20px;
+	transition: all 0.3s ease;
+	background-color: #fafbfc;
+	height: 54px; /* Ensure consistent height */
+	box-sizing: border-box;
+	width: 100%;
+}
+
+/* Make password fields smaller when side by side */
+.row .col-md-6 input[type="password"] {
+	width: 90% !important;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+/* Ensure password fields have exactly the same styling */
+input[type="password"] {
+	height: 54px !important;
+	padding: 15px 20px !important;
+	font-size: 16px !important;
+	border: 2px solid #e1e8ed !important;
+	border-radius: 10px !important;
+	margin-bottom: 20px !important;
+	transition: all 0.3s ease !important;
+	background-color: #fafbfc !important;
+	box-sizing: border-box !important;
+	width: 100% !important;
+}
+
+.form-control:focus {
+	border-color: #7fad39;
+	box-shadow: 0 0 0 0.2rem rgba(127, 173, 57, 0.25);
+	background-color: white;
+}
+.form-control::placeholder {
+	color: #aab8c2;
+}
+
+/* Ensure consistent spacing for password row */
+.row .col-md-6 {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.row .col-md-6:first-child {
+	padding-left: 15px;
+}
+
+.row .col-md-6:last-child {
+	padding-right: 15px;
+}
+
+
+/* Additional consistency for form elements */
+.mb-3 {
+	margin-bottom: 1rem !important;
+}
+
+.btn-register {
+	background: linear-gradient(135deg, #7fad39 0%, #6a9532 100%);
+	border: none;
+	border-radius: 10px;
+	padding: 15px 30px;
+	font-size: 16px;
+	font-weight: 600;
+	width: 100%;
+	color: white;
+	transition: all 0.3s ease;
+	margin-top: 10px;
+}
+
+.btn-register:hover {
+	background: linear-gradient(135deg, #6a9532 0%, #5a7f2a 100%);
+	color: white;
+	transform: translateY(-2px);
+	box-shadow: 0 10px 20px rgba(127, 173, 57, 0.3);
+}
+
+.form-check {
+	text-align: left;
+}
+
+.form-check-label {
+	font-size: 14px;
+	color: #666;
+}
+
+.form-check-label a {
+	color: #7fad39;
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.form-check-label a:hover {
+	color: #6a9532;
+}
+
+.register-links {
+	text-align: center;
+	margin-top: 30px;
+	padding-top: 20px;
+	border-top: 1px solid #e1e8ed;
+}
+
+.register-links a {
+	color: #7fad39;
+	text-decoration: none;
+	font-weight: 600;
+	transition: color 0.3s ease;
+}
+
+.register-links a:hover {
+	color: #6a9532;
+}
+
+.register-links p {
+	color: #666;
+	margin-bottom: 0;
+}
+
+/* Icon styling */
+.register-title::before {
+	content: "👥";
+	display: block;
+	font-size: 3rem;
+	margin-bottom: 20px;
+}
+/* Make password fields smaller when side by side */
