@@ -14,6 +14,22 @@ class HomeController{
      * Nạp giao diện trang chủ cho người dùng.
      */
     public function index(){
+        require_once "Models/Product.php";
+        require_once "Models/ProductCategory.php";
+
+        $categoryModel = new ProductCategory();
+        $productModel = new Product();
+
+        $category = $categoryModel->getAll();
+        if(!is_array($category)) {
+            $category = [];
+        }
+
+        $product = $productModel->getByFeaturedAndStatus();
+        if(!is_array($product)) {
+            $product = [];
+        }
+
         include 'Views/Client/index.php';
     }
 

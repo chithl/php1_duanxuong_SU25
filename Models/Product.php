@@ -126,6 +126,23 @@ class Product{
         return $result;
     }
 
+    public function getByFeaturedAndStatus($is_featured = 1, $status = 'available'){
+        $sql = "SELECT p.id,c.name as category_name,p.name,p.price,p.stock,p.image,p.status FROM $this->_table p INNER JOIN product_categories c ON p.product_category_id = c.id WHERE p.is_featured=:is_featured AND p.status=:status";
+
+        $stmt = $this->_conn->prepare($sql);
+
+        $data = [
+            'is_featured' => $is_featured,
+            'status'      => $status,
+        ];
+
+        $stmt->execute($data);
+
+        $result = $stmt->fetchAll();
+
+        return $result;
+    }
+
     /**
      * Thêm mới một bản ghi vào bảng products.
      *
