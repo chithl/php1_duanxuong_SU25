@@ -112,15 +112,13 @@ class ProductCategory{
      */
     public function insert($data){
         try{
-            $sql  = "INSERT INTO $this->_table (name, status, description, image, created_at, updated_at) VALUES (:name, :status, :description, :image, :created_at, :updated_at)";
+            $sql = "INSERT INTO $this->_table (name, status, description, image) VALUES (:name, :status, :description, :image)";
             $stmt   = $this->_conn->prepare($sql);
             $data = [
                 'name'        => $data['name'],
                 'status'      => $data['status'],
                 'description' => $data['description'] ?? '',
                 'image'       => $data['image'] ?? '',
-                'created_at'  => date('Y-m-d H:i:s'),
-                'updated_at'  => date('Y-m-d H:i:s'),
             ];
             $result = $stmt->execute($data);
 

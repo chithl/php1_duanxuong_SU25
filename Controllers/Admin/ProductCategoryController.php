@@ -85,8 +85,6 @@ class ProductCategoryController{
         $status      = $_POST['status'] ?? '';
         $description = $_POST['description'] ?? '';
         $image       = $_FILES['image'] ?? NULL;
-        $created_at  = $_POST['created_at'] ?? '';
-        $updated_at  = $_POST['updated_at'] ?? '';
         $error       = FALSE;
 
         if ($name === ''){
