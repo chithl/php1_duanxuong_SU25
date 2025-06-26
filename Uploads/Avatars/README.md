@@ -1,1 +1,1 @@
-Chứa hình ảnh avatar của người dùng.
+Chứa hình ảnh sản phẩm
