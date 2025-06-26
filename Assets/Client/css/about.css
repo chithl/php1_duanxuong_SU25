@@ -16,6 +16,7 @@ body {
 }
 
 .about-hero p {
+	color: white;
 	font-size: 1.2rem;
 	max-width: 600px;
 	margin: 0 auto;
