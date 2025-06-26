@@ -38,20 +38,20 @@ class DeliveryController{
     }
 
     public function getDistrict($provinceId){
-        curl_setopt($this->ch, CURLOPT_URL, "https://online-gateway.ghn.vn/shiip/public-api/master-data/district");
+        curl_setopt($this->ch, CURLOPT_URL, "https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=" . $provinceId);
 
         $response = curl_exec($this->ch);
         $response = json_decode($response, true);
 
-        $district = [];
+        // $district = [];
+        //
+        // foreach ($response["data"] as $key => $value) {
+        //     if ($value["ProvinceID"] == $provinceId) {
+        //         array_push($district, $response["data"][$key]);
+        //     }
+        // }
 
-        foreach ($response["data"] as $key => $value) {
-            if ($value["ProvinceID"] == $provinceId) {
-                array_push($district, $response["data"][$key]);
-            }
-        }
-
-        return $district;
+        return $response["data"];
     }
 
     public function getWard($districtId){

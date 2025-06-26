@@ -137,50 +137,104 @@ $errors = $_SESSION["errors"] ?? [];
 </section><!-- Checkout Section End -->
 
 <script>
+
+
     function selectProvince() {
         var provinceId = $("#province").val();
-        var districtId = $("#district").val();
-        var wardId = $("#ward").val();
+        // var districtId = $("#district").val();
+        // var wardId = $("#ward").val();
         $.post(
             "Controllers/Client/AddressAjax.php", {
                 provinceid: provinceId,
-                districtid: districtId,
-                wardcode: wardId,
+                // districtid: districtId,
+                // wardcode: wardId,
             },
 
             function (data) {
+                console.log(data);
+
                 // $("#address").html(data);
                 // document.querySelector("#address").innerHTML = data;
                 var data = JSON.parse(data);
                 console.log(data);
 
-                var district = data.district;
-                var ward = data.ward;
+                // var district = data.district;
+                // var ward = data.ward;
+				//
+                // var getDistrictSelect = document.querySelector("#district");
+                // var getWardSelect = document.querySelector("#ward");
+				//
+                // for (var districtKey of district) {
+                //     console.log(districtKey);
+                //     var option = document.createElement("option");
+                //     option.value = districtKey["DistrictID"];
+                //     option.text = districtKey["DistrictName"];
+                //     if (districtKey["DistrictID"] == districtId) {
+                //         option.selected = true;
+                //     }
+                //     getDistrictSelect.appendChild(option);
+                // }
+				//
+                // for (var wardKey of ward) {
+                //     console.log(wardKey);
+                //     var option = document.createElement("option");
+                //     option.value = wardKey["WardCode"];
+                //     option.text = wardKey["WardName"];
+                //     if (wardKey["WardCode"] == wardId) {
+                //         option.selected = true;
+                //     }
+                //     getWardSelect.appendChild(option);
+                // }
+            }
+        )
+    }
 
-                var getDistrictSelect = document.querySelector("#district");
-                var getWardSelect = document.querySelector("#ward");
+    function selectDistrict() {
+        var districtId = $("#district").val();
+        // var districtId = $("#district").val();
+        // var wardId = $("#ward").val();
+        $.post(
+            "Controllers/Client/AddressAjax.php", {
+                // provinceid: provinceId,
+                districtid: districtId,
+                // wardcode: wardId,
+            },
 
-                for (var districtKey of district) {
-                    console.log(districtKey);
-                    var option = document.createElement("option");
-                    option.value = districtKey["DistrictID"];
-                    option.text = districtKey["DistrictName"];
-                    if (districtKey["DistrictID"] == districtId) {
-                        option.selected = true;
-                    }
-                    getDistrictSelect.appendChild(option);
-                }
+            function (data) {
+                console.log(data);
 
-                for (var wardKey of ward) {
-                    console.log(wardKey);
-                    var option = document.createElement("option");
-                    option.value = wardKey["WardCode"];
-                    option.text = wardKey["WardName"];
-                    if (wardKey["WardCode"] == wardId) {
-                        option.selected = true;
-                    }
-                    getWardSelect.appendChild(option);
-                }
+                // $("#address").html(data);
+                // document.querySelector("#address").innerHTML = data;
+                var data = JSON.parse(data);
+                console.log(data);
+
+                // var district = data.district;
+                // var ward = data.ward;
+                //
+                // var getDistrictSelect = document.querySelector("#district");
+                // var getWardSelect = document.querySelector("#ward");
+                //
+                // for (var districtKey of district) {
+                //     console.log(districtKey);
+                //     var option = document.createElement("option");
+                //     option.value = districtKey["DistrictID"];
+                //     option.text = districtKey["DistrictName"];
+                //     if (districtKey["DistrictID"] == districtId) {
+                //         option.selected = true;
+                //     }
+                //     getDistrictSelect.appendChild(option);
+                // }
+                //
+                // for (var wardKey of ward) {
+                //     console.log(wardKey);
+                //     var option = document.createElement("option");
+                //     option.value = wardKey["WardCode"];
+                //     option.text = wardKey["WardName"];
+                //     if (wardKey["WardCode"] == wardId) {
+                //         option.selected = true;
+                //     }
+                //     getWardSelect.appendChild(option);
+                // }
             }
         )
     }
