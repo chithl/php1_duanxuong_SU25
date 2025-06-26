@@ -95,7 +95,7 @@ $old = $_SESSION['old'] ?? "";
 								<div class="col-sm-9">
 									<input type="file" class="form-control" id="image" name="image"/>
 									<small id="helpId" class="text-danger"><?= $_SESSION['errors']['image_error'] ?? "" ?></small>
-								<img src="Uploads/<?= $result['image'] ?>" alt="" width="100" height="100" class="mt-2 mb-2">
+								<img src="Uploads/Blogs/<?= $result['image'] ?>" alt="" width="100" height="100" class="mt-2 mb-2">
 								</div>
 							</div>
 						<div class="border-top">

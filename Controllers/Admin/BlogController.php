@@ -99,7 +99,7 @@ class BlogController{
         $image = $currentBlog['image'] ?? '';
 
         if (!empty($_FILES["image"]["name"])) {
-            $target_dir    = "Uploads/";
+            $target_dir    = "Uploads/Blogs";
             $file_name     = basename($_FILES["image"]["name"]);
             $imageFileType = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
             $newName       = "Blog" . date("Ymd_His") . "." . $imageFileType;
@@ -191,7 +191,7 @@ class BlogController{
             if ($_FILES["image"]["name"] == "") {
                 $errors["image"] = "Vui lòng thêm ảnh";
             } else {
-                $target_dir = "Uploads/";
+                $target_dir = "Uploads/Blogs";
                 $file_name = basename($_FILES["image"]["name"]);
                 $imageFileType = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
                 $newName = date("Ymd_His") . "." . $imageFileType;
