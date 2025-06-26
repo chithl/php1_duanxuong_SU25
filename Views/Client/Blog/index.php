@@ -36,7 +36,7 @@
 					</div>
 
 					<div class="blog__sidebar__item">
-						<h4>Loại sản phẩm</h4>
+						<h4>Loại bài viết</h4>
 						<ul>
 							<li><a href="?page=blog-list&action=blogList">Tất cả</a></li>
                             <?php foreach ($blogs_categories as $cat): ?>
@@ -78,7 +78,7 @@
                                             <?= htmlspecialchars($blog['title']) ?>
 										</a>
 									</h5>
-									<p><?= htmlspecialchars(mb_strimwidth($blog['content'], 0, 100,
+									<p><?= html_entity_decode(mb_strimwidth($blog['content'], 0, 100,
                                             '...')) ?></p>
 									<a href="?page=blog-detail&action=blogDetail&id=<?= $blog['id'] ?>" class="blog__btn">
 										Đọc thêm <span class="arrow_right"></span>

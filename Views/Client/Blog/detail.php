@@ -51,7 +51,7 @@
 							</ul>
 							<h5><a href="?page=blog-detail&action=blogDetail&id=<?= $blog['id'] ?>">
                                 <?= htmlspecialchars($blog['title']) ?></h5>
-							<p><?= htmlspecialchars(mb_strimwidth($blog['content'], 0, 100,
+							<p><?= html_entity_decode(mb_strimwidth($blog['content'], 0, 100,
                                     '...')) ?></p>
 						</div>
 					</div>

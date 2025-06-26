@@ -103,22 +103,29 @@ $errors = $_SESSION["errors"] ?? [];
 								</div>
 								<ul>
                                     <?php
-	                                    if (isset($_COOKIE["cart"]) && $_COOKIE["cart"] != ""):
-	                                        $products = json_decode($_COOKIE["cart"], TRUE);
-	                                        $totalPrice = 0;
-	                                        foreach ($products as $key => $value):
-		                                        	$totalPrice += $value["total"];
-	                                ?>
+                                    if (isset($_COOKIE["cart"]) && $_COOKIE["cart"] != ""):
+                                        $products = json_decode($_COOKIE["cart"], TRUE);
+                                        $totalPrice = 0;
+                                        foreach ($products as $key => $value):
+                                            $totalPrice += $value["total"];
+                                            ?>
 											<li><?php echo $value["name"]; ?>
 												<span><?php echo number_format($value["price"]); ?> VND</span>
 											</li>
-                                    <?php
-	                                        endforeach;
-                                            endif;
-									?>
+                                        <?php
+                                        endforeach;
+                                    endif;
+                                    ?>
 								</ul>
 
-								<div class="checkout__order__total">Tổng cộng <span><?= number_format($totalPrice) ?? "0" ?> VND</span>
+								<div class="checkout__order__total">Tổng cộng <span>
+										<?php if (isset($totalPrice)){
+                                            echo number_format($totalPrice);
+                                        }else{
+                                            echo "0 ";
+                                        } ?>
+										VND
+									</span>
 								</div>
 								<div class="checkout__input__checkbox">
 
