@@ -68,7 +68,7 @@ $errors = $_SESSION["errors"] ?? [];
 								<div class="checkout__input">
 									<p>Tỉnh/Thành phố<span>*</span></p>
 									<select name="province" onchange="selectProvince()" id="province" class="form-control"">
-									<option value="" selected disabled>Chọn tỉnh/thành phố</option>
+									<option value="" selected disabled>-- Chọn tỉnh/thành phố --</option>
                                     <?php if (isset($province) && is_array($province)): ?><?php foreach ($province as $key => $value): ?>
 										<option value="<?php echo $value["ProvinceID"]; ?>"><?php echo $value["ProvinceName"]; ?></option>
                                     <?php endforeach; ?><?php endif; ?>
@@ -79,7 +79,7 @@ $errors = $_SESSION["errors"] ?? [];
 								<div class="checkout__input">
 									<p>Quận/Huyện<span>*</span></p>
 									<select onchange="selectDistrict()" id="district" name="district" class="form-control">
-										<option value="" selected disabled>Chọn quận/huyện</option>
+										<option value="" selected disabled>-- Chọn quận/huyện --</option>
 									</select>
 									<small id="helpId" class="text-danger"><?= $errors['district_error'] ?? "" ?></small>
 								</div>
@@ -87,7 +87,7 @@ $errors = $_SESSION["errors"] ?? [];
 								<div class="checkout__input">
 									<p>Phường/Xã<span>*</span></p>
 									<select onchange="selectDistrict()" id="ward" name="ward" class="form-control">
-										<option value="" selected disabled>Chọn phường/xã</option>
+										<option value="" selected disabled>-- Chọn phường/xã --</option>
 									</select>
 									<small id="helpId" class="text-danger"><?= $errors['ward_error'] ?? "" ?></small>
 								</div>
@@ -152,7 +152,6 @@ $errors = $_SESSION["errors"] ?? [];
 
         function selectProvince() {
             var provinceId = $("#province").val();
-            // var wardId = $("#ward").val();
             $.post(
                 "Controllers/Client/AddressAjax.php", {
                     provinceid: provinceId,
@@ -172,6 +171,7 @@ $errors = $_SESSION["errors"] ?? [];
                     // var ward = data.ward;
                     //
                     var getDistrictSelect = document.querySelector("#district");
+                    getDistrictSelect.innerHTML = '<option value="">-- Chọn quận/huyện --</option>';
                     // // var getWardSelect = document.querySelector("#ward");
                     // //
                     for (var districtKey of district) {
@@ -197,57 +197,87 @@ $errors = $_SESSION["errors"] ?? [];
         }
 
         function selectDistrict() {
+            // var districtId = $("#district").val();
+			//
+            // $.post(
+            //     "Controllers/Client/AddressAjax.php", {
+            //         districtid: districtId,
+            //     },
+			//
+            //     function (data) {
+            //         console.log(data);
+			//
+            //         var data = JSON.parse(data);
+            //         console.log(data);
+			//
+            //         var ward = data;
+			//
+            //         var getWardSelect = document.querySelector("#ward");
+            //         getWardSelect.innerHTML = '<option value="">-- Chọn phường/xã --</option>';
+            //         var getDistrictSelect = document.querySelector("#district");
+			//
+            //         //
+			//
+            //         for (var districtKey of getDistrictSelect) {
+            //             if (districtKey["DistrictID"] == districtId) {
+            //                 option.selected = true;
+            //             }
+            //         }
+			//
+            //         for (var wardKey of ward) {
+            //             console.log(wardKey);
+            //             var option = document.createElement("option");
+            //             option.value = wardKey["WardCode"];
+            //             option.text = wardKey["WardName"];
+			//
+            //             if (districtKey["WardCode"] == districtId) {
+            //                 option.selected = true;
+            //             }
+			//
+            //             getWardSelect.appendChild(option);
+            //         }
+            //         //
+            //         // for (var wardKey of ward) {
+            //         //     console.log(wardKey);
+            //         //     var option = document.createElement("option");
+            //         //     option.value = wardKey["WardCode"];
+            //         //     option.text = wardKey["WardName"];
+            //         //     if (wardKey["WardCode"] == wardId) {
+            //         //         option.selected = true;
+            //         //     }
+            //         //     getWardSelect.appendChild(option);
+            //         // }
+            //     }
+            // )
+
+
             var districtId = $("#district").val();
+            var wardId = $("#ward").val();
 
-            $.post(
-                "Controllers/Client/AddressAjax.php", {
-                    districtid: districtId,
-                },
+            $.post("Controllers/Client/AddressAjax.php", {
+                districtid: districtId,
+            }, function (data) {
+                console.log("Raw data:", data);
 
-                function (data) {
-                    console.log(data);
+                var wardData = JSON.parse(data); // Kết quả là mảng các xã
+                console.log("Parsed ward data:", wardData);
 
-                    var data = JSON.parse(data);
-                    console.log(data);
+                var getWardSelect = document.querySelector("#ward");
 
-                    var ward = data;
+                // Reset dropdown xã/phường
+                getWardSelect.innerHTML = '<option value="" disabled>-- Chọn phường/xã --</option>';
 
-                    var getWardSelect = document.querySelector("#ward");
-                    var getDistrictSelect = document.querySelector("#district");
-
-                    //
-
-                    for (var districtKey of getDistrictSelect) {
-                        if (districtKey["DistrictID"] == districtId) {
-                            option.selected = true;
-                        }
-                    }
-
-                    for (var wardKey of ward) {
-                        console.log(wardKey);
-                        var option = document.createElement("option");
-                        option.value = wardKey["WardCode"];
-                        option.text = wardKey["WardName"];
-
-                        if (districtKey["WardCode"] == districtId) {
-                            option.selected = true;
-                        }
-
-                        getWardSelect.appendChild(option);
-                    }
-                    //
-                    // for (var wardKey of ward) {
-                    //     console.log(wardKey);
-                    //     var option = document.createElement("option");
-                    //     option.value = wardKey["WardCode"];
-                    //     option.text = wardKey["WardName"];
-                    //     if (wardKey["WardCode"] == wardId) {
-                    //         option.selected = true;
-                    //     }
-                    //     getWardSelect.appendChild(option);
-                    // }
+                // Thêm option cho từng xã
+                for (var wardKey of wardData) {
+                    var option = document.createElement("option");
+                    option.value = wardKey["WardCode"];
+                    option.text = wardKey["WardName"];
+                    getWardSelect.appendChild(option);
+	                if(wardId == wardKey["WardCode"]) {
+		                option.selected = true; // Chọn xã/phường nếu wardId trùng với WardCode
+	                }
                 }
-            )
+            });
         }
 	</script>
 

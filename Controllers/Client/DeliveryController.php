@@ -12,7 +12,7 @@ class DeliveryController{
 
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, [
             "Content-Type: application/json",
-            "Token: 36a3983d-5274-11f0-960e-6e0c36be06c7"
+            "Token: 86fd7162-527c-11f0-ab5f-aa345432b057"
         ]);
     }
 
@@ -74,7 +74,7 @@ class DeliveryController{
         }
 
         // DEFAULT SHOP INFORMATION
-        $shopId = 4829006;
+        $shopId = 4829115;
         $fromName = "Lê Minh Quốc Bảo";
         $fromPhone = "0792846735";
         $fromAddress = "Phong Điền, Cần Thơ";
