@@ -60,11 +60,11 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
 										</option>
 										<option value="out_of_stock" <?= (isset($_GET['status']) && $_GET['status'] == 'out_of_stock') ? 'selected' : '' ?>>
 											Hết hàng
-											thị
+
 										</option>
 										<option value="discontinued" <?= (isset($_GET['status']) && $_GET['status'] == 'discontinued') ? 'selected' : '' ?>>
 											Ngừng hoạt động
-											thị
+
 										</option>
 									</select>
 								</div>
@@ -128,31 +128,4 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
 unset($_SESSION['success']);
 ?>
 <!-- ============================================================== --><!-- End PAge Content --><!-- ============================================================== -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
 
-    function fetchData() {
-        let keyword = $('#keyword').val();
-        let status = $('select[name="status"]').val();
-
-
-        $.ajax({
-            url: 'admin.php',
-            type: 'GET',
-            data: {
-                page: 'product',
-                action: 'search',
-                keyword: keyword,
-                status: status
-            },
-            success: function (data) {
-                $('#tbody').html(data);
-            },
-            error: function (xhr, status, error) {
-                alert('Có lỗi xảy ra khi lấy dữ liệu');
-            }
-        });
-    }
-
-
-</script>

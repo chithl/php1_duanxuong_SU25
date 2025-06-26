@@ -46,7 +46,7 @@ class Product{
      */
     public function getAll(int $start = 0, int $end = 30){
         // require_once 'Models/Connect.php';
-        $sql = "SELECT p.id,c.name as category_name,p.name,p.price,p.stock,p.image,p.status FROM $this->_table p INNER JOIN product_categories c ON p.product_category_id = c.id LIMIT :start, :end";
+        $sql = "SELECT p.*,c.name as category_name FROM $this->_table p INNER JOIN product_categories c ON p.product_category_id = c.id LIMIT :start, :end";
 
         $stmt = $this->_conn->prepare($sql);
 
@@ -85,11 +85,25 @@ class Product{
         return $result;
     }
 
+    //    search by name product
+    public function getAllByName($name){
+        $name = "%" . $name . "%";
+        $sql  = "SELECT * FROM products WHERE name like '$name'";
+
+        $stmt = $this->_conn->query($sql);
+
+
+        $result = $stmt->fetchAll();
+
+        return $result;
+
+    }
+
     public function getByName($keyword){
         $sql     = "SELECT p.id,c.name as category_name,p.name,p.price,p.stock,p.image,p.status FROM $this->_table p INNER JOIN product_categories c ON p.product_category_id = c.id WHERE p.name LIKE '%$keyword%'";
         $product = $this->_conn->query($sql);
-        // $product = $this->_conn->prepare($sql);
-        // $product->execute([':keyword' => "%$keyword%"]);
+        $product = $this->_conn->prepare($sql);
+        $product->execute([':keyword' => "%$keyword%"]);
         $result = $product->fetchAll();
 
         return $result;
