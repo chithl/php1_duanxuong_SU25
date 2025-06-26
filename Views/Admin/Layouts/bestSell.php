@@ -3,56 +3,13 @@
 <style>
 
 
-	.dashboard-container {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-		gap: 20px;
-	}
-
-	.card-dashboard {
-		background-color: white;
-		padding: 20px;
-		border-radius: 12px;
-		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-	}
-
-	.card h3 {
-		margin: 0;
-		font-size: 16px;
-		color: #555;
-	}
-
-	.card p {
-		font-size: 22px;
-		color: #2c3e50;
-		margin-top: 8px;
-	}
-
 	.chart-container {
-		margin-top: 40px;
+		max-width: 800px;
+		margin: auto;
 		background: white;
 		padding: 20px;
-		border-radius: 12px;
-		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+		border-radius: 10px;
 	}
-
-	table {
-		margin-top: 20px;
-		border-collapse: collapse;
-		width: 100%;
-		background: white;
-		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-	}
-
-	table th,
-	table td {
-		border: 1px solid #ddd;
-		padding: 12px;
-		text-align: center;
-	}
-
-	table th {
-		background-color: #f0f0f0;
 	}
 </style><!-- ============================================================== -->
 <div class="page-wrapper">
@@ -121,46 +78,13 @@
 		<!-- Sales chart -->
 		<!-- ============================================================== -->
 
-		<div class="dashboard-container">
-			<div class="card-dashboard">
-				<h3>Doanh thu hôm nay</h3>
-				<p><?= number_format($todayRevenue) ?> đ</p>
-			</div>
-			<div class="card-dashboard">
-				<h3>Doanh thu tháng này</h3>
-				<p><?= number_format($monthRevenue) ?> đ</p>
-			</div>
-			<div class="card-dashboard">
-				<h3>Đơn hàng hôm nay</h3>
-				<p><?= $todayOrders ?> đơn</p>
-			</div>
-			<div class="card-dashboard">
-				<h3>Đơn đang xử lý</h3>
-				<p><?= $pendingOrders ?> đơn</p>
-			</div>
+
+		<div class="chart-container mb-3">
+			<h2 class="text-center">Top 10 sản phẩm bán chạy</h2>
+			<canvas id="bestSellerChart"></canvas>
 		</div>
 
-		<div class="chart-container">
-			<h3>Doanh thu 7 ngày gần nhất</h3>
-			<canvas id="revenueChart" height="100"></canvas>
-		</div>
 
-		<table class="mb-3">
-			<thead>
-			<tr>
-				<th>Ngày</th>
-				<th>Doanh thu</th>
-			</tr>
-			</thead>
-			<tbody>
-            <?php foreach ($revenueByDay as $row): ?>
-				<tr>
-					<td><?= htmlspecialchars($row['day']) ?></td>
-					<td><?= number_format($row['revenue']) ?> đ</td>
-				</tr>
-            <?php endforeach; ?>
-			</tbody>
-		</table>
 		<div class="row g-3">
 			<!-- Total Users -->
 			<div class="col-md-2 col-sm-4 col-6">
@@ -243,33 +167,31 @@
     unset($_SESSION['errors']); ?>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script>
-        const ctx = document.getElementById('revenueChart').getContext('2d');
-        const revenueChart = new Chart(ctx, {
-            type: 'line',
+        const ctx = document.getElementById('bestSellerChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
             data: {
-                labels: <?= json_encode(array_column($revenueByDay, 'day')) ?>,
+                labels: <?= json_encode(array_column($bestSell, 'name'), JSON_UNESCAPED_UNICODE) ?>,
                 datasets: [{
-                    label: 'Doanh thu (VNĐ)',
-                    data: <?= json_encode(array_column($revenueByDay, 'revenue')) ?>,
-                    borderColor: '#27ae60',
-                    backgroundColor: 'rgba(39, 174, 96, 0.1)',
-                    fill: true,
-                    tension: 0.3,
-                    pointRadius: 4
+                    label: 'Số lượng bán',
+                    data: <?= json_encode(array_column($bestSell, 'total_sold')) ?>,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
                 }]
             },
             options: {
+                indexAxis: 'x',
                 responsive: true,
                 plugins: {
-                    legend: {
-                        position: 'top'
-                    },
+                    title: {
+                        display: true,
+                        text: 'Top 10 sản phẩm bán chạy'
+                    }
                 },
                 scales: {
-                    y: {
-                        ticks: {
-                            callback: value => value.toLocaleString('vi-VN') + ' đ'
-                        }
+                    x: {
+                        beginAtZero: true
                     }
                 }
             }

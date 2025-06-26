@@ -272,7 +272,9 @@ switch ($page){
         }
         break;
     default:
-        include 'Views/Admin/Layouts/dashboard.php';
+        require_once 'Controllers/Admin/DashboardController.php';
+        $staticControl = new DashboardController();
+        $staticControl -> index();
 }
 
 require_once 'Views/Admin/Layouts/footer.php';
