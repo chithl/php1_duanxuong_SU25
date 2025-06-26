@@ -280,8 +280,8 @@ class CartController{
         }
 
         require_once "Controllers/Client/DeliveryController.php";
-        $delivery = new DeliveryController();
-        $result   = $delivery->createOrder($name, $phone, $address, $filteredProducts,
+        $delivery    = new DeliveryController();
+        $result      = $delivery->createOrder($name, $phone, $address, $filteredProducts,
             $districtId,
             $wardCode);
         $total_price = 0;
@@ -294,14 +294,14 @@ class CartController{
             // Lưu vào bảng orders
             $orderModel   = new Order(); // class model xử lý bảng orders
             $orderId      = $orderModel->store([
-                'user_id'       => $_SESSION['userId'],
-                'order_code'    => $orderCode,
-                'total_price'   => $total_price,
-                'address'       => $address,
-                'phone'         => $phone,
+                'user_id'                 => $_SESSION['userId'],
+                'order_code'              => $orderCode,
+                'total_price'             => $total_price,
+                'address'                 => $address,
+                'phone'                   => $phone,
                 'shipping_date_estimated' => date('Y-m-d H:i:s',
                     strtotime('+3 days')), // Ngày giao hàng dự kiến
-                'created_at'    => date('Y-m-d H:i:s')
+                'created_at'              => date('Y-m-d H:i:s')
 
             ]);
             $trackingCode = $orderModel->generateTrackingCode($orderId);
@@ -332,6 +332,7 @@ class CartController{
             header("location: index.php?page=cart");
             exit;
         }else{
+            file_put_contents("Logs/delivery.log", $result["message"], FILE_APPEND);
             $messageError             = "Lỗi hệ thống không thể đặt hàng được. Vui lòng thử lại sau.";
             $_SESSION["messageError"] = $messageError;
             header("location: index.php?page=checkout");

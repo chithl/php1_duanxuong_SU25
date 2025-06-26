@@ -43,13 +43,11 @@
 								<thead>
 								<tr>
 									<th>ID</th>
-									<th>Title</th>
-									<th>Content</th>
-									<th>Image</th>
-									<th>Blog category id</th>
-									<th>Created at</th>
-									<th>Updated at</th>
-									<th>Action</th>
+									<th>Tiêu đề</th>
+									<th>Nội dung</th>
+									<th>Hình ảnh</th>
+									<th>Mã danh mục</th>
+									<th>Hành động</th>
 								</tr>
 								</thead>
 								<tbody>
@@ -63,14 +61,12 @@
 											<img src="Uploads/<?= $value["image"] ?>" alt="" width="50px" height="50px">
 										</td>
 										<td><?= $value['blog_category_id'] ?></td>
-										<td><?= $value['created_at'] ?></td>
-										<td><?= $value['updated_at'] ?></td>
 
 										<td>
 											<a class="btn btn-outline-danger" href="?page=blog&action=edit&id=<?= $value["id"] ?>">Sửa</a>
 											<form action="?page=blog&action=delete&id=<?= $value["id"] ?>" method="post" enctype="multipart/form-data" onsubmit="return confirm('Xóa ?')" style="display: inline-block;">
 												<input type="hidden" name="" value="">
-												<button class="btn btn-outline-warning" name="delete">Delete</button>
+												<button class="btn btn-outline-warning" name="delete">Xóa</button>
 											</form>
 										</td>
 									</tr>
