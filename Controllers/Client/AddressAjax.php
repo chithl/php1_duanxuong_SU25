@@ -21,17 +21,17 @@ $wardCode = $_POST["wardcode"] ?? "";
 
 $data = [];
 
-
 if ($provinceId){
-    $data = $delivery->getProvince();
+    $data = $delivery->getDistrict($provinceId);
 }
 
 if ($districtId){
-    $data = $delivery->getDistrict($provinceId);
-}
-if ($wardCode){
     $data = $delivery->getWard($districtId);
 }
+
+//if ($wardCode){
+//    $data = $delivery->getWard($districtId);
+//}
 
 $data = json_encode($data);
 echo $data;
