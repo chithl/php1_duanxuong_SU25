@@ -12,7 +12,7 @@ class ProductCategoryController{
 
     /**
      * @var ProductCategory $_productCategoryModel Đối tượng model ProductCategory để thao tác với
-     *      dữ liệu danh mục sản phẩm
+     *                                             dữ liệu danh mục sản phẩm
      */
     private $_productCategoryModel;
 
@@ -35,8 +35,7 @@ class ProductCategoryController{
         if ($status === ''){
             // nếu status null thì gọi getAll
             $result = $this->_productCategoryModel->getAll();
-        }
-        else{
+        }else{
             // nếu không thì gọi getAllByStatus
             $result = $this->_productCategoryModel->getAllByStatus($status);
         }
@@ -81,28 +80,95 @@ class ProductCategoryController{
         // kiểm tra trống
         // kiểm tra trùng tên => ngoại trừ tên hiện tại của id đang sửa
 
-        $id     = $_POST['id'] ?? '';
-        $name   = $_POST['name'] ?? '';
-        $status = $_POST['status'] ?? '';
+        $id          = $_POST['id'] ?? '';
+        $name        = $_POST['name'] ?? '';
+        $status      = $_POST['status'] ?? '';
+        $description = $_POST['description'] ?? '';
+        $image       = $_FILES['image'] ?? NULL;
+        $error       = FALSE;
+
+        if ($name === ''){
+            // nếu tên rỗng
+            $error                     = TRUE;
+            $_SESSION['error']['name'] = 'Tên danh mục không được để trống';
+        }else{
+            // kiểm tra tên có bị trùng không
+            $checkName = $this->_productCategoryModel->checkName($name);
+            if ($checkName){
+                $error                     = TRUE;
+                $_SESSION['error']['name'] = 'Tên danh mục đã tồn tại';
+            }
+        }
+
+        if ($status === ''){
+            // nếu status rỗng
+            $error                       = TRUE;
+            $_SESSION['error']['status'] = 'Trạng thái không được để trống';
+        }
+
+        if ($description === ''){
+            // nếu mô tả rỗng
+            $error                            = TRUE;
+            $_SESSION['error']['description'] = 'Mô tả không được để trống';
+        }
+
+        if ($image && $image['error'] === 0){
+            // nếu có file ảnh
+            // kiểm tra file ảnh
+            $checkImage = $this->_productCategoryModel->checkImage($image);
+            if (!$checkImage){
+                $error                      = TRUE;
+                $_SESSION['error']['image'] = 'File ảnh không hợp lệ';
+            }else{
+                $uploadDir  = 'Uploads/Product-categories/';
+                $filename   = time() . '-' . basename($image['name']);
+                $uploadPath = $uploadDir . $filename;
+
+                if (move_uploaded_file($image['tmp_name'], $uploadPath)){
+                    $image = $filename;
+                }else{
+                    $error                      = TRUE;
+                    $_SESSION['error']['image'] = 'Tải ảnh lên thất bại';
+                }
+            }
+        }else{
+            $old   = $this->_productCategoryModel->getOne($id);
+            $image = $old['image'] ?? '';
+        }
+
+        // Sau khi đã kiểm tra tất cả:
+        if ($error){
+            $_SESSION['old'] = [
+                'name'        => $name,
+                'status'      => $status,
+                'description' => $description,
+            ];
+            header('Location: ?page=product-category&action=edit&id=' . $id);
+            exit;
+        }
 
         // truyền dữ liệu qua model
         $data = [
-            'id'     => $id,
-            'name'   => $name,
-            'status' => $status
+            'id'          => $id,
+            'name'        => $name,
+            'status'      => $status,
+            'description' => $description,
+            'image'       => $image,
         ];
 
         // model trả về kết quả
         $result = $this->_productCategoryModel->update($id, $data);
 
-        // var_dump($result);
         // nếu thành công => chuyển sang trang danh sách và thông báo
         if ($result){
-            header('location: ?page=product-category');
-        }
-        else{
+            $_SESSION['success'] = 'Cập nhật danh mục sản phẩm thành công';
+            header('location: ?page=product-category&action=index');
+        }else{
+            $_SESSION['error'] = 'Cập nhật danh mục sản phẩm thất bại';
             header('location: ?page=product-category&action=edit&id=' . $id);
         }
+
+        exit;
         // nếu thất bại thì chuyển sang trang edit
 
         // kiểm tra kết quả cập nhật thành công / thất bại
@@ -135,12 +201,66 @@ class ProductCategoryController{
 
         // kiểm tra các trường dữ liệu không được trống
         // $name = isset($_POST['name']) ? $_POST['name'] : '';
-        $name   = $_POST['name'] ?? '';
-        $status = $_POST['status'] ?? '';
+        $name        = $_POST['name'] ?? '';
+        $status      = $_POST['status'] ?? '';
+        $description = $_POST['description'] ?? '';
+        $image       = $_FILES['image'] ?? NULL;
+        $error       = FALSE;
 
-        $error = FALSE;
+        if ($name === ''){
+            // nếu tên rỗng
+            $error                     = TRUE;
+            $_SESSION['error']['name'] = 'Tên danh mục không được để trống';
+        }else{
+            // kiểm tra tên có bị trùng không
+            $checkName = $this->_productCategoryModel->checkName($name);
+            if ($checkName){
+                $error                     = TRUE;
+                $_SESSION['error']['name'] = 'Tên danh mục đã tồn tại';
+            }
+        }
+
+        if ($status === ''){
+            // nếu status rỗng
+            $error                       = TRUE;
+            $_SESSION['error']['status'] = 'Trạng thái không được để trống';
+        }
+
+        if ($description === ''){
+            // nếu mô tả rỗng
+            $error                            = TRUE;
+            $_SESSION['error']['description'] = 'Mô tả không được để trống';
+        }
+
+        if ($image && $image['error'] === 0){
+            // nếu có file ảnh
+            // kiểm tra file ảnh
+            $checkImage = $this->_productCategoryModel->checkImage($image);
+            if (!$checkImage){
+                $error                      = TRUE;
+                $_SESSION['error']['image'] = 'File ảnh không hợp lệ';
+            }else{
+                $uploadDir  = 'Uploads/Product-categories/';
+                $filename   = time() . '-' . basename($image['name']);
+                $uploadPath = $uploadDir . $filename;
+
+                if (move_uploaded_file($image['tmp_name'], $uploadPath)){
+                    $image = $filename;
+                }else{
+                    $error                      = TRUE;
+                    $_SESSION['error']['image'] = 'Tải ảnh lên thất bại';
+                }
+            }
+        }else{
+            $image = '';
+        }
 
         if ($error){
+            $_SESSION['old'] = [
+                'name'        => $name,
+                'status'      => $status,
+                'description' => $description,
+            ];
             header('location: ?page=product-category&action=create');
             exit;
         }
@@ -149,8 +269,10 @@ class ProductCategoryController{
         // thêm vào cơ sở dữ liệu
         // dữ liệu để thêm: $name, $status
         $data = [
-            'name'   => $name,
-            'status' => $status
+            'name'        => $name,
+            'status'      => $status,
+            'description' => $description,
+            'image'       => $image,
         ];
 
         // gọi model
@@ -159,11 +281,11 @@ class ProductCategoryController{
         // var_dump($result);
         if ($result){
             // Lưu session thêm thành công
+            $_SESSION['success'] = 'Thêm danh mục sản phẩm thành công';
             // Chuyển về trang danh sách
             header('location: ?page=product-category&action=index');
             exit;
         }
-
         // Lưu session thêm thất bại
         header('location: ?page=product-category&action=create');
 
@@ -183,14 +305,23 @@ class ProductCategoryController{
             exit;
         }
 
+        $image = $this->_productCategoryModel->getOne($id)['image'] ?? NULL;
+        if ($image){
+            $imagePath = 'Uploads/Product-categories/' . $image;
+            if (file_exists($imagePath)){
+                unlink($imagePath);
+            }
+        }
+
         $result = $this->_productCategoryModel->delete($id);
 
         if ($result){
             // thành công
+            $_SESSION['success'] = 'Xoá danh mục sản phẩm thành công';
 
-        }
-        else{
+        }else{
             // thất bại
+            $_SESSION['error'] = 'Xoá danh mục sản phẩm thất bại';
         }
         header('location: ?page=product-category&action=index');
     }
