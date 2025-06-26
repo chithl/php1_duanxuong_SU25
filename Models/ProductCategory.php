@@ -114,18 +114,16 @@ class ProductCategory{
         try{
             $sql = "INSERT INTO $this->_table (name, status, description, image) VALUES (:name, :status, :description, :image)";
             $stmt   = $this->_conn->prepare($sql);
-            $data = [
-                'name'        => $data['name'],
-                'status'      => $data['status'],
-                'description' => $data['description'] ?? '',
-                'image'       => $data['image'] ?? '',
-            ];
             $result = $stmt->execute($data);
 
             return $result;
         }
         catch (PDOException $e){
-            // ghi log
+            file_put_contents(
+                __DIR__ . '/../Logs/error.log', // Đường dẫn tới thư mục logs
+                date('Y-m-d H:i:s') . ' - ' . $e->getMessage() . PHP_EOL,
+                FILE_APPEND
+            );
             var_dump($e->getMessage());
         }
     }
