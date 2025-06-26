@@ -85,13 +85,12 @@ class BlogCategory{
      */
     public function insert($data){
         try{
-            $sql    = "INSERT INTO $this->_table (name, status) VALUES (:name, :status)";
+            $sql    = "INSERT INTO $this->_table (name, description) VALUES (:name, :description)";
             $stmt   = $this->_conn->prepare($sql);
             $result = $stmt->execute($data);
 
             return $result;
-        }
-        catch (PDOException $e){
+        }catch (PDOException $e){
             // ghi log
             var_dump($e->getMessage());
         }
@@ -107,15 +106,13 @@ class BlogCategory{
      */
     public function update(int $id, array $data){
         try{
-            $sql  = "UPDATE $this->_table SET name=:name,status=:status WHERE id=:id";
-            $stmt = $this->_conn->prepare($sql);
-
+            $sql    = "UPDATE $this->_table SET name=:name,description=:description WHERE id=:id";
+            $stmt   = $this->_conn->prepare($sql);
             $result = $stmt->execute($data);
 
-            return $stmt->rowCount();
+            return $result;
             // return $result;
-        }
-        catch (PDOException $e){
+        }catch (PDOException $e){
             // ghi log
             var_dump($e->getMessage());
         }
@@ -139,10 +136,20 @@ class BlogCategory{
             return $stmt->rowCount();
 
             // return $result;
-        }
-        catch (PDOException $e){
+        }catch (PDOException $e){
             // echo '<pre>';
             var_dump($e);
         }
+    }
+
+    public function getByName($name){
+        $sql  = "SELECT * FROM $this->_table WHERE name = :name";
+        $stmt = $this->_conn->prepare($sql);
+        $data = [
+            "name" => $name,
+        ];
+        $stmt->execute($data);
+
+        return $stmt->fetch();
     }
 }

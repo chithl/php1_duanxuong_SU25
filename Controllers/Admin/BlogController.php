@@ -66,6 +66,7 @@ class BlogController{
         // nếu tìm thấy
         // hiển thị giao diện form sửa
         include 'Views/Admin/Blog/edit.php';
+        unset($_SESSION['errors']);
     }
 
     /**
@@ -75,35 +76,70 @@ class BlogController{
      * Chuyển hướng về trang danh sách hoặc trang sửa tuỳ theo kết quả.
      */
     public function update(){
-        // lấy dữ liệu ngừoi dùng nhập
-        // kiểm tra trống
-        // kiểm tra trùng tên => ngoại trừ tên hiện tại của id đang sửa
+        $id = $_POST['id'] ?? '';
+        $title = trim($_POST['title'] ?? '');
+        $content = trim($_POST['content'] ?? '');
+        $blog_category_id = trim($_POST['blog_category_id'] ?? '');
 
-        $id     = $_POST['id'] ?? '';
-        $name   = $_POST['name'] ?? '';
-        $status = $_POST['status'] ?? '';
+        $errors = [];
+        if (empty($title)) {
+            $errors['title'] = "Tiêu đề không được để trống.";
+        }
+        if (empty($content)) {
+            $errors['content'] = "Nội dung không được để trống.";
+        }
+        if (empty($blog_category_id)) {
+            $errors['blog_category_id'] = "Danh mục không được để trống.";
+        }
 
-        // truyền dữ liệu qua model
+        $currentBlog = $this->_blogModel->getOne($id);
+        $image = $currentBlog['image'] ?? '';
+
+        if (!empty($_FILES["image"]["name"])) {
+            $target_dir    = "Uploads/";
+            $file_name     = basename($_FILES["image"]["name"]);
+            $imageFileType = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+            $newName       = "Blog" . date("Ymd_His") . "." . $imageFileType;
+            $target_file   = $target_dir . '/' . $newName;
+
+            $allowTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+            if (!in_array($imageFileType, $allowTypes)){
+                $errors["image"] = "Chỉ chấp nhận file ảnh (jpg, jpeg, png, gif, webp)";
+            } else {
+                if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)){
+                    $image = $newName;
+                } else {
+                    $errors["image"] = "Upload ảnh thất bại, vui lòng thử lại";
+                }
+            }
+        }
+
+        if (!empty($errors)) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = ['content' => $content, 'title' => $title, 'blog_category_id' => $blog_category_id];
+            // echo "lỗi ở đây";
+            header('Location: admin.php?page=blog&action=edit&id=' . $id);
+            exit;
+        }
+
         $data = [
-            'id'     => $id,
-            'name'   => $name,
-            'status' => $status
+            "id" => $id,
+            "title" => $title,
+            "content" => $content,
+            "blog_category_id" => $blog_category_id,
+            "image" => $image
         ];
 
-        // model trả về kết quả
         $result = $this->_blogModel->update($id, $data);
 
-        // var_dump($result);
-        // nếu thành công => chuyển sang trang danh sách và thông báo
         if ($result){
-            header('location: ?page=blog');
-        }
-        else{
+            $_SESSION['messageSuccess'] = "Cập nhật thành công";
+            header('location: admin.php?page=blog&action=index');
+        } else {
+            $_SESSION['messageError'] = "Cập nhật thất bại";
             header('location: ?page=blog&action=edit&id=' . $id);
         }
-        // nếu thất bại thì chuyển sang trang edit
-
-        // kiểm tra kết quả cập nhật thành công / thất bại
     }
 
     /**
@@ -126,47 +162,81 @@ class BlogController{
         // bắt đầu kiểm tra, bắt lỗi client và admin
         // kiểm tra có $_POST create không ?
 
-        if (!isset($_POST['create'])){
-            header('location: ?page=blog&action=index');
-            exit;
+        if (isset($_POST["create"])) {
+            // echo "Có";
+            $title = htmlspecialchars(trim($_POST['title'] ?? ''));
+            $content = htmlspecialchars(trim($_POST['content'] ?? ''));
+            $blog_category_id = htmlspecialchars(trim($_POST['blog_category_id'] ?? ''));
+
+            $errors = [];
+
+            if (empty($title)) {
+                $errors['title'] = "Tiêu đề không được để trống.";
+            }
+
+            if (empty($content)) {
+                $errors['content'] = "Nội dung không được để trống.";
+            }
+            if (empty($blog_category_id)) {
+                $errors['blog_category_id'] = "Danh mục không được để trống.";
+            }
+
+            if ($_FILES["image"]["name"] == "") {
+                $errors["image"] = "Vui lòng thêm ảnh";
+            } else {
+                $target_dir = "Uploads/";
+                $file_name = basename($_FILES["image"]["name"]);
+                $imageFileType = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+                $newName = date("Ymd_His") . "." . $imageFileType;
+                $target_file = $target_dir . $newName;
+
+                $allowTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+                if (!in_array($imageFileType, $allowTypes)) {
+                    $errors["image"] = "Chỉ chấp nhận file ảnh (jpg, jpeg, png, gif, webp)";
+                } else {
+                    $newName = "Blog" . date("Ymd_His") . "." . $imageFileType;
+                    $target_file = $target_dir . '/' . $newName;
+
+                    if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                        $image = $newName;
+                    } else {
+                        $errors["image"] = "Upload ảnh thất bại, vui lòng thử lại";
+                    }
+                }
+            }
+
+            if (!empty($errors)) {
+                $_SESSION['errors'] = $errors;
+                $_SESSION['old'] = ['content' => $content, 'title' => $title, 'blog_category_id' => $blog_category_id];
+                // echo "lỗi ở đây";
+                header('Location: admin.php?page=blog&action=create');
+                exit;
+            }
+
+            $data = [
+                "title" => $title,
+                "content" => $content,
+                "blog_category_id" => $blog_category_id,
+                "image" => $image
+            ];
+
+            $result = $this->_blogModel->insert($data);
+            var_dump($result);
+            if ($result) {
+                $messageSuccess = "Thêm thành công";
+                $_SESSION["messageSuccess"] = $messageSuccess;
+                header("location: admin.php?page=blog&action=index");
+            } else {
+                $messageError = "Thêm thất bại do lỗi hệ thống";
+                $_SESSION["messageError"] = $messageError;
+                header("location: admin.php?page=blog&action=create");
+            }
+        } else {
+            echo "Ko có post";
         }
-
-        // kiểm tra các trường dữ liệu không được trống
-        // $name = isset($_POST['name']) ? $_POST['name'] : '';
-        $name   = $_POST['name'] ?? '';
-        $status = $_POST['status'] ?? '';
-
-        $error = FALSE;
-
-        if ($error){
-            header('location: ?page=blog&action=create');
-            exit;
-        }
-        // kết thúc kiểm tra
-
-        // thêm vào cơ sở dữ liệu
-        // dữ liệu để thêm: $name, $status
-        $data = [
-            'name'   => $name,
-            'status' => $status
-        ];
-
-        // gọi model
-        $result = $this->_blogModel->insert($data);
-
-        // var_dump($result);
-        if ($result){
-            // Lưu session thêm thành công
-            // Chuyển về trang danh sách
-            header('location: ?page=blog&action=index');
-            exit;
-        }
-
-        // Lưu session thêm thất bại
-        header('location: ?page=blog&action=create');
-
-        // Chuyển về trang danh sách danh mục
     }
+
 
     /**
      * Thực hiện xoá blog.

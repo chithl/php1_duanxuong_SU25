@@ -67,34 +67,45 @@ class BlogCategoryController{
      * Chuyển hướng về trang danh sách hoặc trang sửa tuỳ theo kết quả.
      */
     public function update(){
-        //    lấy dữ liệu ngừoi dùng nhập
-        // kiểm tra trống
-        // kiểm tra trùng tên => ngoại trừ tên hiện tại của id đang sửa
+        $id = $_POST['id'] ?? '';
+        $name = trim($_POST['name'] ?? '');
+        $description = trim($_POST['description'] ?? '');
 
-        $id     = $_POST['id'] ?? '';
-        $name   = $_POST['name'] ?? '';
-        $status = $_POST['status'] ?? '';
+        $errors = [];
+        if (empty($name)){
+            $errors['name'] = "Tên không được để trống.";
+            $_SESSION['messageError'] = "Có lỗi xảy ra, vui lòng nhập lại dữ liệu.";
+        }
 
-        // truyền dữ liệu qua model
+        if (empty($description)) {
+            $errors['description'] = "Mô tả không được để trống.";
+            $_SESSION['messageError'] = "Có lỗi xảy ra, vui lòng nhập lại dữ liệu.";
+        }
+
+
+        if (!empty($errors)) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = ['description' => $description, 'name' => $name];
+            // echo "lỗi ở đây";
+            header('Location: admin.php?page=blog-category&action=edit&id=' . $id);
+            exit;
+        }
+
         $data = [
-            'id'     => $id,
-            'name'   => $name,
-            'status' => $status
+            "id" => $id,
+            "name" => $name,
+            "description" => $description,
         ];
 
-        // model trả về kết quả
         $result = $this->_blogCategoryModel->update($id, $data);
 
-        // nếu thành công => chuyển sang trang danh sách và thông báo
         if ($result){
-            header('location: ?page=blog-category');
-        }
-        else{
+            $_SESSION['messageSuccess'] = "Cập nhật thành công";
+            header('location: admin.php?page=blog-category&action=index');
+        } else {
+            $_SESSION['messageError'] = "Cập nhật thất bại";
             header('location: ?page=blog-category&action=edit&id=' . $id);
         }
-        // nếu thất bại thì chuyển sang trang edit
-
-        // kiểm tra kết quả cập nhật thành công / thất bại
     }
 
     /**
@@ -117,58 +128,56 @@ class BlogCategoryController{
         // bắt đầu kiểm tra, bắt lỗi client và admin
         // kiểm tra có $_POST create không ?
 
-        if (!isset($_POST['create'])){
-            header('location: ?page=blog-category&action=index');
-            exit;
+        if (isset($_POST["create"])) {
+            // echo "Có";
+            $name = htmlspecialchars(trim($_POST['name'] ?? ''));
+            $description = htmlspecialchars(trim($_POST['description'] ?? ''));
+
+            $errors = [];
+
+            if (empty($name)) {
+                $errors['name'] = "Tên không được để trống.";
+                $_SESSION['messageError'] = "Có lỗi xảy ra, vui lòng nhập lại dữ liệu.";
+            }else {
+                $nameTemp = $this->_blogCategoryModel->getByName($name);
+                if ($nameTemp) {
+                    $errors['name'] = 'Tên không được trùng.';
+                }
+                $_SESSION['messageError'] = "Có lỗi xảy ra, vui lòng nhập lại dữ liệu.";
+            }
+
+            if (empty($description)) {
+                $errors['description'] = "Mô tả không được để trống.";
+                $_SESSION['messageError'] = "Có lỗi xảy ra, vui lòng nhập lại dữ liệu.";
+            }
+
+            if (!empty($errors)) {
+                $_SESSION['errors'] = $errors;
+                $_SESSION['old'] = ['description' => $description, 'name' => $name];
+                // echo "lỗi ở đây";
+                header('Location: admin.php?page=blog-category&action=create');
+                exit;
+            }
+
+            $data = [
+                "name" => $name,
+                "description" => $description,
+            ];
+
+            $result = $this->_blogCategoryModel->insert($data);
+            var_dump($result);
+            if ($result) {
+                $messageSuccess = "Thêm thành công";
+                $_SESSION["messageSuccess"] = $messageSuccess;
+                header("location: admin.php?page=blog-category&action=index");
+            } else {
+                $messageError = "Thêm thất bại do lỗi hệ thống";
+                $_SESSION["messageError"] = $messageError;
+                header("location: admin.php?page=blog-category&action=create");
+            }
+        } else {
+            echo "Ko có post";
         }
-
-        // kiểm tra các trường dữ liệu không được trống
-        // $name = isset($_POST['name']) ? $_POST['name'] : '';
-        $name   = $_POST['name'] ?? '';
-        $status = $_POST['status'] ?? '';
-
-        // bắt trùng
-        // getByName($name) nếu trả mảng rỗng => insert
-        // nếu ko báo lỗi trùng name
-
-        // lưu session lỗi
-        $error = FALSE;
-        if ($name == ''){
-            // echo 'Chưa nhập';
-            $error_name_message = '';
-            $error_name_value   = '';
-            $error              = TRUE;
-        }
-
-        if ($error){
-            header('location: ?page=blog-category&action=create');
-            exit;
-        }
-        // kết thúc kiểm tra
-
-        // thêm vào cơ sở dữ liệu
-        // dữ liệu để thêm: $name, $status
-
-        $data = [
-            'name'   => $name,
-            'status' => $status
-        ];
-        // gọi model
-        $result = $this->_blogCategoryModel->insert($data);
-
-        // var_dump($result);
-        if ($result){
-            // Lưu session thêm thành công
-            // Chuyển về trang danh sách
-            header('location: ?page=blog-category&action=index');
-            exit;
-        }
-
-        // Lưu session thêm thất bại
-        header('location: ?page=blog-category&action=create');
-
-
-        // Chuyển về trang danh sách danh mục
     }
 
     /**
