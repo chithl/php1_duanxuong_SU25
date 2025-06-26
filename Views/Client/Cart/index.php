@@ -43,6 +43,89 @@
 	#delete-icon:hover {
 		color: black;
 	}
+	/*css model*/
+	/* Overlay nền tối */
+	.modal-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.5);
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 0.3s ease;
+	}
+
+	/* Hộp modal */
+	.modal-box {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -60%);
+		background-color: #fff;
+		padding: 20px;
+		border-radius: 10px;
+		width: 90%;
+		max-width: 400px;
+		opacity: 0;
+		transition: all 0.4s ease;
+	}
+
+	/* Hiện modal */
+	.modal-overlay {
+		position: fixed;
+		top: 0; left: 0; right: 0; bottom: 0;
+		background-color: rgba(0, 0, 0, 0.5);
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 0.3s ease;
+		z-index: 999;
+	}
+
+	.modal-box {
+		position: fixed;
+		top: 50%; left: 50%;
+		transform: translate(-50%, -60%);
+		background-color: #fff;
+		padding: 20px;
+		border-radius: 10px;
+		width: 90%;
+		max-width: 400px;
+		opacity: 0;
+		transition: all 0.4s ease;
+		z-index: 1000;
+	}
+
+	.modal-overlay.active {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	.modal-overlay.active .modal-box {
+		transform: translate(-50%, -50%);
+		opacity: 1;
+	}
+
+	.modal-header {
+		font-size: 18px;
+		font-weight: bold;
+		margin-bottom: 10px;
+	}
+
+	.modal-footer {
+		text-align: right;
+		margin-top: 15px;
+	}
+
+	.btn-close {
+		padding: 6px 12px;
+		background-color: #6c757d;
+		color: white;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+	}
 </style><!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="Assets/Client/img/breadcrumb.jpg">
 	<div class="container">
@@ -60,20 +143,31 @@
 	</div>
 </section><!-- Breadcrumb Section End --><!-- Shoping Cart Section Begin -->
 <section class="shoping-cart spad">
+	<!--	start model-->
     <?php
     if (isset($_SESSION["messageSuccess"])):
         ?>
-		<div class="alert alert-success d-flex align-items-center" role="alert">
-			<svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
-				<use xlink:href="#check-circle-fill"/>
-			</svg>
-			<div>
-                <?= $_SESSION["messageSuccess"] ?? "" ?>
-			</div>
-		</div>
-    <?php
-    endif;
-    ?>
+	    <div class="modal-overlay active" id="myModal">
+		    <div class="modal-box">
+			    <div class="modal-header">Thông báo</div>
+			    <div class="modal-body">
+                    <?= htmlspecialchars($_SESSION["messageSuccess"]) ?>
+			    </div>
+			    <div class="modal-footer">
+				    <button class="btn-close" onclick="closeModal()">Đóng</button>
+			    </div>
+		    </div>
+	    </div>
+	    <script>
+            function closeModal() {
+                document.getElementById('myModal').classList.remove('active');
+            }
+
+            window.addEventListener('load', function () {
+            });
+	    </script>
+    <?php endif; ?>
+	<!--	end of modal-->
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-12">
