@@ -76,14 +76,6 @@
 					<ul>
 						<li class="active"><a href="index.php">Trang chủ</a></li>
 						<li><a href="?page=product-list">Sản phẩm</a></li>
-						<!--                        <li><a href="#">Pages</a>-->
-						<!--                            <ul class="header__menu__dropdown">-->
-						<!--                                <li><a href="./shop-details.html">Shop Details</a></li>-->
-						<!--                                <li><a href="./shoping-cart.html">Shoping Cart</a></li>-->
-						<!--                                <li><a href="./checkout.html">Check Out</a></li>-->
-						<!--                                <li><a href="./blog-details.html">Blog Details</a></li>-->
-						<!--                            </ul>-->
-						<!--                        </li>-->
 						<li><a href="?page=blog-list">Bài viết</a></li>
 						<li><a href="?page=contact">Liên Hệ</a></li>
 						<li><a href="?page=about">Về chúng tôi</a></li>
@@ -93,7 +85,6 @@
 			<div class="col-lg-2">
 				<div class="header__cart">
 					<ul>
-						<!--                        <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>-->
 						<li><a href="?page=cart"><i class="fa fa-shopping-bag"></i> </a></li>
 					</ul>
                     <?php
@@ -107,7 +98,16 @@
                     }
                     ?>
 					<div class="header__cart__price">Giỏ hàng:
-						<span><?= $totalPrice ?? "0" ?> VND</span></div>
+						<span>
+							<?php
+                            if (isset($totalPrice)){
+                                echo number_format($totalPrice) . ' VND';
+                            }else{
+                                echo '0 VND';
+                            }
+                            ?>
+						</span>
+					</div>
 				</div>
 			</div>
 		</div>

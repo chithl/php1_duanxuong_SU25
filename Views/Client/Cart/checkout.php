@@ -118,7 +118,7 @@ $errors = $_SESSION["errors"] ?? [];
 									?>
 								</ul>
 
-								<div class="checkout__order__total">Tổng cộng <span><?= $totalPrice ?? "0" ?> VND</span>
+								<div class="checkout__order__total">Tổng cộng <span><?= number_format($totalPrice) ?? "0" ?> VND</span>
 								</div>
 								<div class="checkout__input__checkbox">
 
