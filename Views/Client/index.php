@@ -43,7 +43,9 @@
 							</ul>
 						</div>
 						<div class="featured__item__text">
-							<h6><a href="#"><?= $value["name"] ?></a></h6>
+							<h6>
+								<a href="?page=product-detail&id=<?= $value['id'] ?>""><?= $value["name"] ?></a>
+							</h6>
 							<h5><?= number_format($value["price"]) ?> đ</h5>
 						</div>
 					</div>
@@ -55,22 +57,6 @@
 </section><!-- Featured Section End -->
 
 <!-- Banner Begin -->
-<div class="banner">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-6 col-md-6 col-sm-6">
-				<div class="banner__pic">
-					<img src="../Assets/Client/img/banner/banner-1.jpg" alt="">
-				</div>
-			</div>
-			<div class="col-lg-6 col-md-6 col-sm-6">
-				<div class="banner__pic">
-					<img src="../Assets/Client/img/banner/banner-2.jpg" alt="">
-				</div>
-			</div>
-		</div>
-	</div>
-</div><!-- Banner End -->
 
 <!-- Latest Product Section Begin -->
 <!--<section class="latest-product spad">-->
