@@ -33,13 +33,9 @@
 					<div class="product__details__price"><?= ($product['discount_price'] == 0) ? number_format($product['price']) : number_format($product['discount_price']) ?> đ</div>
 					<p><?= $product['description'] ?></p>
 					<div class="product__details__quantity">
-						<div class="quantity">
-							<div class="pro-qty">
-								<input type="text" value="1">
-							</div>
-						</div>
+
 					</div>
-					<a href="#" class="primary-btn">Thêm vào giỏ hàng</a>
+					<a href="index.php?page=add-to-cart&id=<?= $product["id"] ?>" class="primary-btn">Thêm vào giỏ hàng</a>
 					<ul>
 						<li><b>Thời gian giao hàng</b>
 							<span>3 ngày</span></li>

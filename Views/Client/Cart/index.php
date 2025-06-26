@@ -196,7 +196,7 @@
 									<h5><?= $value["name"] ?? "" ?></h5>
 								</td>
 								<td class="shoping__cart__price">
-                                    <?= $value["price"] ?? "" ?> VND
+                                    <?= number_format($value["price"]) ?? "" ?> VND
 								</td>
 								<td class="shoping__cart__quantity">
 									<div class="quantity">
@@ -208,7 +208,7 @@
 									</div>
 								</td>
 								<td class="shoping__cart__total">
-                                    <?= $value["total"] ?? "" ?> VND
+                                    <?= number_format($value["total"]) ?? "" ?> VND
 								</td>
 								<td class="shoping__cart__item__close">
 									<a id="delete-icon" href="index.php?page=delete-product-cart&id=<?= $value["id"] ?>" class="icon_close"></a>
