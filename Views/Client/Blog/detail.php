@@ -21,7 +21,7 @@
 			<div class="col-lg-8 col-md-10">
 				<div class="blog__details__text text-center">
 					<img src="Uploads/Blogs/<?= htmlspecialchars($blog['image']) ?>" alt="" style="width: 100%; height: auto; object-fit: cover; margin-bottom: 20px;">
-					<p class="text-start"><?= nl2br(htmlspecialchars($blog['content'])) ?></p>
+                    <?= html_entity_decode($blog['content']) ?>
 				</div>
 			</div>
 		</div>
