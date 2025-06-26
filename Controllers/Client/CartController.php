@@ -60,7 +60,9 @@ class CartController{
 
         // Lấy sản phẩm từ DB
         $product = $productModel->getOne($id);
-
+        if($product['discount_price'] > 0){
+            $product['price'] = $product['discount_price'];
+        }
         if (!is_array($product)){
             echo "Sản phẩm không tồn tại.";
 

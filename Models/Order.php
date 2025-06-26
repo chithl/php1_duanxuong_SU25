@@ -75,7 +75,7 @@ class Order{
         $stmt->execute($data);
     }
 
-    public function getAllByStatus($payment_status = 'Chờ xác nhận', int $start = 0, int $end = 30){
+    public function getAllByStatus($payment_status = 'pending', int $start = 0, int $end = 30){
         $sql  = "SELECT * FROM $this->_table WHERE payment_status = :payment_status LIMIT :start, :end";
         $stmt = $this->_conn->prepare($sql);
 
