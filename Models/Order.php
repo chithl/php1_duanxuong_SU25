@@ -56,11 +56,11 @@ class Order{
 
     public function store($data){
         $sql  = "INSERT INTO $this->_table (
-                user_id, order_code, total_price, address, phone,
-                  shipping_date_estimated, created_at
+                user_id, total_price, shipping_address, phone,
+                  shipping_date_estimated
             ) VALUES (
-                :user_id, :order_code, :total_price, :address, :phone
-                 , :shipping_date_estimated, :created_at
+                :user_id, :total_price, :shipping_address, :phone
+                 , :shipping_date_estimated
             )";
         $stmt = $this->_conn->prepare($sql);
         $stmt->execute($data);
@@ -69,8 +69,8 @@ class Order{
     }
 
     public function storeDetail($data){
-        $sql  = "INSERT INTO order_details (order_id, product_id, name, price, quantity, weight)
-            VALUES (:order_id, :product_id, :name, :price, :quantity, :weight)";
+        $sql  = "INSERT INTO order_details (order_id, product_id, price, quantity)
+            VALUES (:order_id, :product_id, :price, :quantity)";
         $stmt = $this->_conn->prepare($sql);
         $stmt->execute($data);
     }

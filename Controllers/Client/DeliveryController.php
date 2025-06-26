@@ -12,7 +12,7 @@ class DeliveryController{
 
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, [
             "Content-Type: application/json",
-            "Token: a7af6e4a-5250-11f0-8971-76eec3689da9"
+            "Token: 36a3983d-5274-11f0-960e-6e0c36be06c7"
         ]);
     }
 
@@ -69,8 +69,12 @@ class DeliveryController{
 
     public function createOrder($toName, $toPhone, $toAddress, $products, $toDistrictId, $toWardCode)
     {
+        foreach ($products as $key => $product){
+            $products[$key]["weight"] = (int) $product["weight"];
+        }
+
         // DEFAULT SHOP INFORMATION
-        $shopId = 4828595;
+        $shopId = 4829006;
         $fromName = "Lê Minh Quốc Bảo";
         $fromPhone = "0792846735";
         $fromAddress = "Phong Điền, Cần Thơ";
@@ -90,6 +94,10 @@ class DeliveryController{
             $totalWeight += $value["weight"] * $value["quantity"];
         }
 
+        echo $totalPrice;
+        echo PHP_EOL;
+        echo $totalWeight;
+
         $data = [
             "shop_id" => $shopId,
             "from_name" => $fromName, //string
@@ -106,9 +114,9 @@ class DeliveryController{
             "cod_amount" => $totalPrice, //TOTAL PRICE
             "content" => "Đây là nội dung đơn hàng",
             "weight" => $totalWeight,
-            "length" => 30,
-            "width" => 20,
-            "height" => 5,
+            "length" => 10,
+            "width" => 5,
+            "height" => 10,
             "payment_type_id" => 2, //Người nhận trả
             "required_note" => "CHOTHUHANG",
             "service_type_id" => 5, //Vận chuyển theo kiểu truyền thống
