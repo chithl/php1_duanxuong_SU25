@@ -28,6 +28,14 @@ class Blog{
         $this->_conn = $db->getConnection();
     }
 
+    public function getCategories(){
+        $sql    = "SELECT * FROM blog_categories";
+        $stmt   = $this->_conn->query($sql);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
     /**
      * Lấy tất cả dữ liệu từ bảng blogs với phân trang.
      *
@@ -122,8 +130,12 @@ class Blog{
 
         }
         catch (PDOException $e){
-            // log error
-            var_dump($e->getMessage());
+            file_put_contents(
+                __DIR__ . '/../Logs/error.log', // Đường dẫn tới thư mục logs
+                date('Y-m-d H:i:s') . ' - ' . $e->getMessage() . PHP_EOL,
+                FILE_APPEND
+            );
+
         }
     }
 

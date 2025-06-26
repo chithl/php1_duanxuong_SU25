@@ -55,8 +55,9 @@ class BlogController{
             header('location: ?page=blog&action=index');
             exit;
         }
-
+        $categories = $this->_blogModel->getCategories();
         $result = $this->_blogModel->getOne($id);
+
         // nếu ko có dữ liệu
         if (!$result){
             header('location: ?page=blog&action=index');
@@ -84,11 +85,13 @@ class BlogController{
         $errors = [];
         if (empty($title)) {
             $errors['title'] = "Tiêu đề không được để trống.";
+//            $_SESSION['messageError'] = "Xảy ra lỗi, vui lòng kiểm tra lại dữ liệu.";
         }
         if (empty($content)) {
             $errors['content'] = "Nội dung không được để trống.";
+//            $_SESSION['messageError'] = "Xảy ra lỗi, vui lòng kiểm tra lại dữ liệu.";
         }
-        if (empty($blog_category_id)) {
+        if ($blog_category_id == '') {
             $errors['blog_category_id'] = "Danh mục không được để trống.";
         }
 
@@ -149,6 +152,7 @@ class BlogController{
      */
     public function create(){
         // hiển thị giao diện trang thêm danh mục
+        $categories = $this->_blogModel->getCategories();
         include 'Views/Admin/Blog/create.php';
     }
 
@@ -172,13 +176,16 @@ class BlogController{
 
             if (empty($title)) {
                 $errors['title'] = "Tiêu đề không được để trống.";
+                $_SESSION['messageError'] = "Xảy ra lỗi, vui lòng kiểm tra lại dữ liệu.";
             }
 
             if (empty($content)) {
                 $errors['content'] = "Nội dung không được để trống.";
+                $_SESSION['messageError'] = "Xảy ra lỗi, vui lòng kiểm tra lại dữ liệu.";
             }
             if (empty($blog_category_id)) {
                 $errors['blog_category_id'] = "Danh mục không được để trống.";
+                $_SESSION['messageError'] = "Xảy ra lỗi, vui lòng kiểm tra lại dữ liệu.";
             }
 
             if ($_FILES["image"]["name"] == "") {
