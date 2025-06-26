@@ -312,4 +312,22 @@ class User{
             var_dump($e);
         }
     }
+
+    public function Login($username, $password)
+    {
+
+        $sql = "SELECT * FROM users WHERE username =:username";
+        $stmt = $this->_conn->prepare($sql);
+        $data = [
+            ':username' => $username
+        ];
+        $stmt->execute($data);
+        $user = $stmt->fetch();
+        $password_hash = $user['password'] ?? '';
+        if ($user && password_verify($password, $password_hash)) {
+            return $user;
+        } else {
+            return false;
+        }
+    }
 }
