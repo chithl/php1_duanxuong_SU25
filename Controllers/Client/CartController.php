@@ -1,5 +1,8 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 /**
  * Class CartController
  *
@@ -122,8 +125,15 @@ class CartController{
         $cart = [];
 
         if (isset($_COOKIE["cart"])){
+
             $cart  = json_decode($_COOKIE["cart"], TRUE);
             $found = FALSE;
+
+            if (count($cart) <= 0){
+                setcookie("cart", "", time() - 3600, "/");
+                header("Location: index.php?page=cart");
+                exit;
+            }
 
             foreach ($cart as $key => $item){
                 if ($item["id"] == $id){
@@ -157,7 +167,50 @@ class CartController{
         exit;
     }
 
+    public function deleteProductFromCart(){
+        $id = $_GET["id"] ?? "";
+
+        if (!$id){
+            echo "Thiếu ID sản phẩm.";
+
+            return;
+        }
+
+        // Xử lý giỏ hàng
+        $cart = [];
+
+        if (isset($_COOKIE["cart"])){
+            $cart = json_decode($_COOKIE["cart"], TRUE);
+
+            foreach ($cart as $key => $item){
+                if ($item["id"] == $id){
+                    unset($cart[$key]);
+
+                    if (count($cart) <= 0){
+                        // Nếu giỏ hàng trống, xoá cookie
+                        setcookie("cart", "", time() - 3600, "/");
+                        header("Location: index.php?page=cart");
+                        exit;
+                    }
+                    break;
+                }
+            }
+        }
+
+        // Cập nhật lại cookie
+        setcookie("cart", json_encode(array_values($cart)), time() + 3600 * 24 * 30, "/");
+        header("Location: index.php?page=cart");
+        exit;
+    }
+
     public function checkoutAction(){
+        if (!isset($_SESSION['login'])){
+            $messageLogin             = "Vui lòng đăng nhập để thanh toán.";
+            $_SESSION["messageLogin"] = $messageLogin;
+            header("Location: index.php?page=login&action=index");
+            exit;
+        }
+
         $name    = $_POST["name"] ?? "";
         $phone   = $_POST["phone"] ?? "";
         $address = $_POST["address"] ?? "";
@@ -182,34 +235,34 @@ class CartController{
             $errors["address_error"] = "Vui lòng nhập địa chỉ chi tiết.";
         }
 
-        if(empty($provinceId)) {
+        if (empty($provinceId)){
             $errors["province_error"] = "Vui lòng chọn quận tình thành phố.";
         }
 
-        if(empty($districtId)) {
+        if (empty($districtId)){
             $errors["district_error"] = "Vui lòng chọn quận huyện.";
         }
 
-        if(empty($wardCode)) {
+        if (empty($wardCode)){
             $errors["ward_error"] = "Vui lòng chọn phường xã.";
         }
 
         $products = json_decode($_COOKIE["cart"], TRUE) ?? "";
 
-        if(!is_array($products)) {
+        if (!is_array($products)){
             $_SESSION["messageError"] = "Giỏ hàng của bạn không có sản phẩm nào.";
             header("location: index.php?page=checkout");
             exit;
         }
 
-        if(count($errors) > 0){
-            $errors["name_old"] = $name;
-            $errors["phone_old"] = $phone;
+        if (count($errors) > 0){
+            $errors["name_old"]    = $name;
+            $errors["phone_old"]   = $phone;
             $errors["address_old"] = $address;
 
             // Nếu có lỗi, lưu vào session và chuyển hướng về trang checkout
             $_SESSION["messageError"] = "Vui lòng kiểm tra lại thông tin bạn đã nhập.";
-            $_SESSION["errors"] = $errors;
+            $_SESSION["errors"]       = $errors;
             header("Location: index.php?page=checkout");
             exit;
         }
@@ -228,15 +281,146 @@ class CartController{
             $wardCode);
 
         if ($result["code"] == 200){
-            echo "Đặt hàng thành công!";
-            setcookie("cart", "", time()-3600);
+            if (isset($_SESSION["userId"])){
+                $this->sendMail($_SESSION["userId"], $address);
+                setcookie("cart", "", time() - 3600);
+            }
 
-            $messageSuccess = "Đặt hàng thành công! Mã đơn hàng: " . $result["data"]["order_code"];
+            echo "Đặt hàng thành công!";
+
+            $messageSuccess             = "Đặt hàng thành công! Mã đơn hàng: " . $result["data"]["order_code"];
             $_SESSION["messageSuccess"] = $messageSuccess;
             header("location: index.php?page=cart");
             exit;
         }else{
-            echo "Đặt hàng thất bại: " . $result["message"];
+            $messageError             = "Lỗi hệ thống không thể đặt hàng được. Vui lòng thử lại sau.";
+            $_SESSION["messageError"] = $messageError;
+            header("location: index.php?page=checkout");
+            exit;
+        }
+    }
+
+    public function sendMail($userId, $address){
+        require_once "Models/User.php";
+        $userModel = new User();
+        echo $userId;
+        $account = $userModel->getEmailByUserId($userId);
+
+        $email = $account["email"];
+
+        echo $account["username"];
+
+        require_once 'Assets/PHPMailer-6.10.0/src/PHPMailer.php';
+        require_once 'Assets/PHPMailer-6.10.0/src/SMTP.php';
+        require_once 'Assets/PHPMailer-6.10.0/src/Exception.php';
+
+        $mail = new PHPMailer(TRUE);
+        //        $mail->charSet = 'UTF-8';
+        $mail->setLanguage('vi');
+        $mail->CharSet = "UTF-8";
+
+        try{
+            $mail->SMTPDebug   = 2;
+            $mail->Debugoutput = 'html';
+
+            // Cấu hình SMTP Gmail
+            $mail->isSMTP();
+            $mail->Host     = 'smtp.gmail.com';
+            $mail->SMTPAuth = TRUE;
+
+            // Gmail của tôi
+            $mail->Username = 'baolmq05@gmail.com';
+
+            // App Password Google
+            $mail->Password = 'oahm irqv pzsl cuvb';
+
+            $mail->SMTPSecure = 'tls';  // hoặc: PHPMailer::ENCRYPTION_STARTTLS
+            $mail->Port       = 587;
+            // Người gửi
+            $mail->setFrom('baolmq05@gmail.com', 'Đặt hàng thành công');
+
+            // Người nhận
+            $mail->addAddress($email, 'Client Bao');
+
+            // Nội dung
+            $mail->Subject = 'Đặt hàng thành công';
+
+            $body0 = '
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Hóa đơn</title>
+            <style>
+                body { font-family: Arial, sans-serif; color: #333; padding: 20px; }
+                .invoice-box { max-width: 700px; margin: auto; border: 1px solid #eee; padding: 30px; background-color: #f9f9f9; }
+                h2 { text-align: center; color: #2c3e50; }
+                .info { margin-bottom: 20px; }
+                .info p { margin: 5px 0; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #ddd; }
+                th { background-color: #f0f0f0; }
+                .total { text-align: right; font-weight: bold; padding-top: 10px; }
+            </style>
+        </head>
+        <body>
+            <div class="invoice-box">
+                <h2>HÓA ĐƠN MUA HÀNG</h2>
+        
+                <div class="info">
+                ';
+
+            $body1 = '<p><strong>Tên người nhận:</strong>' . ' ' . $account["username"] . '</p>
+                    <p><strong>Số điện thoại:</strong>' . ' ' . $account["phone"] . '</p>
+                    <p><strong>Địa chỉ:</strong>' . ' ' . $address . '</p>
+                </div>
+        
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tên sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Đơn giá</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+
+            $order = json_decode($_COOKIE["cart"], TRUE) ?? "";
+            $body2 = "";
+
+            foreach ($order as $key => $value){
+                $item = "<tr>" . "<td>" . $value["name"] . "</td>"
+                        . "<td>" . $value["quantity"] . "</td>" .
+                        "<td>" . $value["price"] . "</td>" .
+                        "<td>" . $value["total"] . "</td>" .
+                        "</tr>";
+
+                $body2 .= $item;
+            }
+
+            $totalPrice = 0;
+
+            foreach ($order as $key => $value){
+                $totalPrice += $value["total"];
+            }
+
+
+            $body3 = "</tbody></table>" . "<p class='total'>Tổng tiền: " . $totalPrice . "</p>" .
+                     "</div>
+        </body>
+        </html>";
+
+            $mail->Body = $body0 . $body1 . $body2 . $body3;
+
+            $mail->isHTML(TRUE);
+            $mail->send();
+
+
+        }catch (Exception $e){
+            $error = "Send Mail Fail When " . date("Ymd_His") . " with messageError: " . $e->getMessage() . PHP_EOL;
+            file_put_contents("Logs/delivery.log", $error, FILE_APPEND);
         }
     }
 }

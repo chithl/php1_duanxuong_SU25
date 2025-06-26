@@ -45,22 +45,6 @@ class ProductController{
         include 'Views/Admin/Product/index.php';
     }
 
-    public function search(){
-        $keyword = $_GET['keyword'] ?? '';
-        $status  = $_GET['status'] ?? '';
-        if ($status === ''){
-            if ($keyword != ''){
-                $products = $this->_productModel->getByName($keyword);
-            }else{
-                $products = $this->_productModel->getAll();
-            }
-        }elseif (!empty($keyword) && $status !== ''){
-            $products = $this->_productModel->getByNameAndStatus($keyword, $status);
-        }else{
-            $products = $this->_productModel->getAllByStatus($status);
-        }
-        include 'Views/Admin/Product/search.php';
-    }
 
     /**
      * Hiển thị form sửa sản phẩm.

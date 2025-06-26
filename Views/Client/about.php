@@ -1,4 +1,94 @@
 <!-- About Hero Section Begin -->
+<style>
+	.slide {
+		display: none;
+		display: flex;
+		justify-content: center; /* ngang */
+		align-items: center; /* dọc */
+		height: 500px;
+		background-color: #000;
+	}
+
+	.slide img {
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
+	}
+
+	.slideshow-container {
+		position: relative;
+		max-width: 600px;
+		height: 400px;
+		margin: 60px auto;
+		overflow: hidden;
+		border-radius: 12px;
+		box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+		background-size: cover;
+		background-position: center;
+	}
+
+	.slide {
+		display: none;
+	}
+
+	.slide img {
+		width: 100%;
+		height: auto;
+		object-fit: cover;
+	}
+
+	.fade {
+		animation: fade 1s ease-in-out;
+	}
+
+	@keyframes fade {
+		from { opacity: 1; }
+		to { opacity: 1; }
+	}
+
+	.prev, .next {
+		cursor: pointer;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		padding: 12px;
+		font-size: 24px;
+		background-color: rgba(0, 0, 0, 0.5);
+		color: #fff;
+		border: none;
+		border-radius: 50%;
+		z-index: 10;
+		user-select: none;
+	}
+
+	.prev:hover, .next:hover {
+		background-color: rgba(0, 0, 0, 0.8);
+	}
+
+	.prev { left: 20px; }
+	.next { right: 20px; }
+
+	.dots {
+		text-align: center;
+		padding: 12px;
+	}
+
+	.dot {
+		height: 10px;
+		width: 10px;
+		margin: 0 4px;
+		background-color: #bbb;
+		border-radius: 50%;
+		display: inline-block;
+		transition: background 0.3s;
+		cursor: pointer;
+	}
+
+	.dot.active {
+		background-color: #333;
+	}
+
+</style>
 <section class="about-hero">
 	<div class="container">
 		<div class="row">
@@ -25,7 +115,11 @@
 				<p>Với đội ngũ sáng lập có kinh nghiệm lâu năm trong ngành nông nghiệp và thực phẩm, chúng tôi đã xây dựng mạng lưới đối tác nông dân tin cậy trên khắp cả nước, đảm bảo mọi sản phẩm đều đạt tiêu chuẩn hữu cơ quốc tế.</p>
 			</div>
 			<div class="story-image">
-				<img src="Uploads/Avatars/ceo1.jpg" alt="Khởi đầu Ogani">
+
+				<div class="slideshow-container" id="slideshow"></div>
+
+				<div class="dots" id="dots"></div>
+
 			</div>
 		</div>
 
@@ -36,7 +130,7 @@
 				<p>Hệ thống cửa hàng và dịch vụ giao hàng tận nơi của chúng tôi hiện có mặt tại các thành phố lớn, giúp khách hàng dễ dàng tiếp cận với thực phẩm hữu cơ chất lượng cao mọi lúc, mọi nơi.</p>
 			</div>
 			<div class="story-image">
-				<img src="Uploads/Avatars/ceo2.jpg" alt="Phát triển Ogani">
+				<img src="Uploads/Avatars/anh5.jpg" alt="Phát triển Ogani">
 			</div>
 		</div>
 	</div>
@@ -120,19 +214,19 @@
 			<div class="col-lg-4 col-md-6">
 				<div class="team-member">
 					<div class="member-photo">
-						<img src="Uploads/Avatars/ceo3.webp" alt="CEO">
+						<img src="Uploads/Avatars/anh2.jpg" alt="CEO">
 					</div>
-					<h4>Nguyễn Văn An</h4>
+					<h4>Lê Minh Quốc Bảo</h4>
 					<div class="position">Tổng Giám đốc & Người sáng lập</div>
-					<p>Với hơn 15 năm kinh nghiệm trong ngành nông nghiệp, anh An là người đặt nền móng cho tầm nhìn phát triển nông nghiệp hữu cơ tại Việt Nam.</p>
+					<p>Với hơn 15 năm kinh nghiệm trong ngành nông nghiệp, anh Bảo là người đặt nền móng cho tầm nhìn phát triển nông nghiệp hữu cơ tại Việt Nam.</p>
 				</div>
 			</div>
 			<div class="col-lg-4 col-md-6">
 				<div class="team-member">
 					<div class="member-photo">
-						<img src="Uploads/Avatars/ceo1.jpg" alt="CTO">
+						<img src="Uploads/Avatars/anh7.jpg" alt="CTO">
 					</div>
-					<h4>Trần Thị Minh</h4>
+					<h4>Nguyễn Hoàng Bảo</h4>
 					<div class="position">Giám đốc Vận hành</div>
 					<p>Chịu trách nhiệm quản lý chuỗi cung ứng và đảm bảo chất lượng sản phẩm từ trang trại đến bàn ăn của khách hàng.</p>
 				</div>
@@ -140,15 +234,73 @@
 			<div class="col-lg-4 col-md-6">
 				<div class="team-member">
 					<div class="member-photo">
-						<img src="Uploads/Avatars/ceo2.jpg" alt="Marketing Director">
+						<img src="Uploads/Avatars/anh8.jpg" alt="Marketing Director">
 					</div>
-					<h4>Lê Hoàng Nam</h4>
+					<h4>Phạm Huy Bền</h4>
 					<div class="position">Giám đốc Marketing</div>
 					<p>Chuyên gia marketing với kinh nghiệm phát triển thương hiệu và kết nối với cộng đồng yêu thích thực phẩm hữu cơ.</p>
 				</div>
 			</div>
 		</div>
 	</div>
+</section><!-- Team Section End -->
+<section class="team-section">
+	<div class="container">
+		<div class="section-title">
+			<h2>Đội ngũ nhân viên</h2>
+			<p>Những con người tài năng đứng sau thành công của Ogani</p>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-4 col-md-6">
+				<div class="team-member">
+					<div class="member-photo">
+						<img src="Uploads/Avatars/anh1.jpg" alt="CEO">
+					</div>
+					<div class="position">Nhân Viên</div>
+					<h4>Nguyễn Thị Như Ngọc</h4>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-6">
+				<div class="team-member">
+					<div class="member-photo">
+						<img src="Uploads/Avatars/anh6.jpg" alt="CEO">
+					</div>
+					<div class="position">Nhân Viên</div>
+					<h4>Phạm Xuân Bắc</h4>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-6">
+				<div class="team-member">
+					<div class="member-photo">
+						<img src="Uploads/Avatars/anh9.jpg" alt="CEO">
+					</div>
+					<div class="position">Nhân Viên</div>
+
+					<h4>Đinh Quốc Toàn</h4>
+				</div>
+			</div>
+			<div class="col-lg-7 col-md-6">
+				<div class="team-member">
+					<div class="member-photo">
+						<img src="Uploads/Avatars/anh11.jpg" alt="CEO">
+					</div>
+					<div class="position">Nhân Viên</div>
+
+					<h4>Nguyễn Công Ben</h4>
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-6">
+				<div class="team-member">
+					<div class="member-photo">
+						<img src="Uploads/Avatars/anh4.jpg" alt="CEO">
+					</div>
+					<div class="position">Nhân Viên</div>
+
+					<h4>Ong Tuấn Nghĩa</h4>
+				</div>
+			</div>
+		</div>
 </section><!-- Team Section End -->
 
 <!-- Stats Section Begin -->
@@ -194,3 +346,60 @@
 		</div>
 	</div>
 </section><!-- Contact CTA Section End -->
+<script>
+    const totalImages = 10;
+    const slideshowContainer = document.getElementById('slideshow');
+    const dotsContainer = document.getElementById('dots');
+
+    // Tạo slide từ ảnh anh1.jpg -> anh13.jpg
+    for (let i = 1; i <= totalImages; i++) {
+        const slide = document.createElement('div');
+        slide.className = 'slide fade';
+        slide.innerHTML = `<img src="Uploads/Avatars/anh${i}.jpg" alt="Ảnh ${i}">`;
+        slideshowContainer.appendChild(slide);
+
+        const dot = document.createElement('span');
+        dot.className = 'dot';
+        dot.onclick = () => currentSlide(i);
+        dotsContainer.appendChild(dot);
+    }
+
+    let slideIndex = 1;
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        const slides = document.getElementsByClassName('slide');
+        const dots = document.getElementsByClassName('dot');
+
+        if (n > slides.length) {
+            slideIndex = 1;
+        }
+        if (n < 1) {
+            slideIndex = slides.length;
+        }
+
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = 'none';
+        }
+
+        for (let i = 0; i < dots.length; i++) {
+            dots[i].classList.remove('active');
+        }
+
+        slides[slideIndex - 1].style.display = 'block';
+        dots[slideIndex - 1].classList.add('active');
+    }
+
+    // Tự động chạy
+    setInterval(() => {
+        plusSlides(1);
+    }, 1000);
+</script>

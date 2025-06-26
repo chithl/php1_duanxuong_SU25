@@ -23,12 +23,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
 // update: thực hiện lưu trữ (cập nhật)
 // delete: thực hiện xoá
 // show: hiển thị chi tiết (tuỳ chọn)
-if ($page === 'product' && $action === 'search'){
-    require 'Controllers/Admin/ProductController.php';
-    $product = new ProductController;
-    $product->search();
-    exit;
-}
+
 require_once 'config.php';
 require_once 'Views/Admin/Layouts/header.php';
 
@@ -272,7 +267,9 @@ switch ($page){
         }
         break;
     default:
-        include 'Views/Admin/Layouts/dashboard.php';
+        require_once 'Controllers/Admin/DashboardController.php';
+        $staticControl = new DashboardController();
+        $staticControl -> index();
 }
 
 require_once 'Views/Admin/Layouts/footer.php';

@@ -64,6 +64,31 @@ class User{
         }
     }
 
+    public function getEmailByUserId($id){
+        $stmt = $this->_conn->prepare("SELECT * FROM users WHERE id = :id");
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            return $result;
+        } else {
+            return null;
+        }
+    }
+
+    public function getIdByUsername($username)
+    {
+        $stmt = $this->_conn->prepare("SELECT id FROM users WHERE username = :username");
+        $stmt->bindParam(":username", $username);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            return $result['id'];
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Lấy tất cả bản ghi theo trạng thái.
      *

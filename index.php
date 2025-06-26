@@ -61,10 +61,10 @@ switch ($page){
         $cart->productCartDecrement();
         break;
 
-    case "remove-from-cart":
+    case "delete-product-cart":
         require_once 'Controllers/Client/CartController.php';
         $cart = new CartController();
-        $cart->removeProductFromCart();
+        $cart->deleteProductFromCart();
         break;
 
     case 'checkout':

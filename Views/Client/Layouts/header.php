@@ -16,7 +16,7 @@
 	<link rel="stylesheet" href="Assets/Client/css/bootstrap.min.css" type="text/css">
 	<link rel="stylesheet" href="Assets/Client/css/font-awesome.min.css" type="text/css">
 	<link rel="stylesheet" href="Assets/Client/css/elegant-icons.css" type="text/css">
-<!--	<link rel="stylesheet" href="Assets/Client/css/nice-select.css" type="text/css">-->
+	<!--	<link rel="stylesheet" href="Assets/Client/css/nice-select.css" type="text/css">-->
 	<link rel="stylesheet" href="Assets/Client/css/jquery-ui.min.css" type="text/css">
 	<link rel="stylesheet" href="Assets/Client/css/owl.carousel.min.css" type="text/css">
 	<link rel="stylesheet" href="Assets/Client/css/slicknav.min.css" type="text/css">
@@ -51,16 +51,15 @@
 					<div class="header__top__right">
 
 
-                        <div class="header__top__right__auth">
+						<div class="header__top__right__auth">
                             <?php if (isset($_SESSION['login'])): ?>
-                                <span><a href="?page=profile&id=<?= htmlspecialchars($_SESSION['login']['id']) ?>"><i
-                                                class="fa fa-user"></i> <?= htmlspecialchars($_SESSION['login']['username']) ?></a></span>
-                                <a href="?page=logout">Đăng xuất</a>
+								<span><a href="?page=profile&id=<?= htmlspecialchars($_SESSION['login']['id']) ?>"><i class="fa fa-user"></i> <?= htmlspecialchars($_SESSION['login']['username']) ?></a></span>
+								<a href="?page=logout">Đăng xuất</a>
                             <?php else: ?>
-                                <a href="?page=login&action=index"><i class="fa fa-user"></i> Đăng nhập</a>
+								<a href="?page=login&action=index"><i class="fa fa-user"></i> Đăng nhập</a>
                             <?php endif; ?>
-                        </div>
-                    </div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -97,7 +96,18 @@
 						<!--                        <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>-->
 						<li><a href="?page=cart"><i class="fa fa-shopping-bag"></i> </a></li>
 					</ul>
-					<div class="header__cart__price">Giỏ hàng: <span>150.000VNĐ</span></div>
+                    <?php
+                    if (isset($_COOKIE['cart'])){
+                        $cart       = json_decode($_COOKIE['cart'], TRUE);
+                        $totalPrice = 0;
+
+                        foreach ($cart as $key => $value){
+                            $totalPrice += $value['total'];
+                        }
+                    }
+                    ?>
+					<div class="header__cart__price">Giỏ hàng:
+						<span><?= $totalPrice ?? "0" ?> VND</span></div>
 				</div>
 			</div>
 		</div>
@@ -113,8 +123,10 @@
 			<div class="col-lg-12">
 				<div class="hero__search w-100">
 					<div class="hero__search__form w-100">
-						<form action="#" class="d-flex w-100">
-							<input type="text" class="form-control" placeholder="Bạn đang tìm kiếm gì?" style="flex:1;">
+						<form action="index.php?page=product-list" class="d-flex w-100">
+							<input type="hidden" name="page" value="product-list">
+							<input type="text" name="name" class="form-control" placeholder="Bạn đang tìm kiếm gì?" style="flex:1;" value="<?= $_GET['name'] ?? ''; ?>">>
+
 							<button type="submit" class="site-btn" style="min-width:120px;">Tìm</button>
 						</form>
 					</div>
