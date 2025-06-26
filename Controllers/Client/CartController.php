@@ -287,35 +287,35 @@ class CartController{
             $total_price += $item['price'] * $item['quantity'];
         }
         if ($result["code"] == 200){
-            $orderCode = $result["data"]["order_code"];
-
-            // Lưu vào bảng orders
-            $orderModel   = new Order(); // class model xử lý bảng orders
-            $orderId      = $orderModel->store([
-                'user_id'                 => $_SESSION['userId'],
-                'order_code'              => $orderCode,
-                'total_price'             => $total_price,
-                'address'                 => $address,
-                'phone'                   => $phone,
-                'shipping_date_estimated' => date('Y-m-d H:i:s',
-                    strtotime('+3 days')), // Ngày giao hàng dự kiến
-                'created_at'              => date('Y-m-d H:i:s')
-
-            ]);
-            $trackingCode = $orderModel->generateTrackingCode($orderId);
-            $orderModel->updateTrackingCode($orderId, $trackingCode);
-            // Lưu vào bảng order_details
-            $orderDetailModel = new Order(); // class model xử lý bảng order_details
-            foreach ($filteredProducts as $item){
-                $orderDetailModel->storeDetail([
-                    'order_id'   => $orderId,
-                    'product_id' => $item['id'], // bạn cần chắc chắn `$item['id']` tồn tại
-                    'name'       => $item['name'],
-                    'price'      => $item['price'],
-                    'quantity'   => $item['quantity'],
-                    'weight'     => $item['weight']
-                ]);
-            }
+//            $orderCode = $result["data"]["order_code"];
+//
+//            // Lưu vào bảng orders
+//            $orderModel   = new Order(); // class model xử lý bảng orders
+//            $orderId      = $orderModel->store([
+//                'user_id'                 => $_SESSION['userId'],
+//                'order_code'              => $orderCode,
+//                'total_price'             => $total_price,
+//                'address'                 => $address,
+//                'phone'                   => $phone,
+//                'shipping_date_estimated' => date('Y-m-d H:i:s',
+//                    strtotime('+3 days')), // Ngày giao hàng dự kiến
+//                'created_at'              => date('Y-m-d H:i:s')
+//
+//            ]);
+//            $trackingCode = $orderModel->generateTrackingCode($orderId);
+//            $orderModel->updateTrackingCode($orderId, $trackingCode);
+//            // Lưu vào bảng order_details
+//            $orderDetailModel = new Order(); // class model xử lý bảng order_details
+//            foreach ($filteredProducts as $item){
+//                $orderDetailModel->storeDetail([
+//                    'order_id'   => $orderId,
+//                    'product_id' => $item['id'], // bạn cần chắc chắn `$item['id']` tồn tại
+//                    'name'       => $item['name'],
+//                    'price'      => $item['price'],
+//                    'quantity'   => $item['quantity'],
+//                    'weight'     => $item['weight']
+//                ]);
+//            }
 
             // Gửi mail và xóa giỏ hàng
             if (isset($_SESSION["userId"])){
