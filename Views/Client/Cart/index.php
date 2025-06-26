@@ -35,6 +35,14 @@
 		-webkit-appearance: none;
 		margin: 0;
 	}
+
+	#delete-icon {
+		font-size: 30px;
+	}
+
+	#delete-icon:hover {
+		color: black;
+	}
 </style><!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="Assets/Client/img/breadcrumb.jpg">
 	<div class="container">
@@ -94,7 +102,7 @@
 									<h5><?= $value["name"] ?? "" ?></h5>
 								</td>
 								<td class="shoping__cart__price">
-                                    <?= $value["price"] ?? "" ?>
+                                    <?= $value["price"] ?? "" ?> VND
 								</td>
 								<td class="shoping__cart__quantity">
 									<div class="quantity">
@@ -106,10 +114,10 @@
 									</div>
 								</td>
 								<td class="shoping__cart__total">
-                                    <?= $value["total"] ?? "" ?>
+                                    <?= $value["total"] ?? "" ?> VND
 								</td>
 								<td class="shoping__cart__item__close">
-									<span class="icon_close"></span>
+									<a id="delete-icon" href="index.php?page=delete-product-cart&id=<?= $value["id"] ?>" class="icon_close"></a>
 								</td>
 							</tr>
                         <?php

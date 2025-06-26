@@ -4,22 +4,34 @@ require "DeliveryController.php";
 $delivery = new DeliveryController();
 //
 $provinceId = $_POST["provinceid"] ?? "";
-//
-$province = $delivery->getProvince();
-//
+
 $districtId = $_POST["districtid"] ?? "";
 //
 $wardCode = $_POST["wardcode"] ?? "";
 //
-$district = $delivery->getDistrict($provinceId);
+// $district = $delivery->getDistrict($provinceId);
+// //
+// $ward = $delivery->getWard($districtId);
 //
-$ward = $delivery->getWard($districtId);
+// $data = [
+//     "province" => $province,
+//     "district" => $district,
+//     "ward"     => $ward,
+// ];
 
-$data= [
-    "province" => $province,
-    "district" => $district,
-    "ward"     => $ward,
-];
+$data = [];
+
+if ($provinceId){
+    $data = $delivery->getDistrict($provinceId);
+}
+
+if ($districtId){
+    $data = $delivery->getWard($districtId);
+}
+
+//if ($wardCode){
+//    $data = $delivery->getWard($districtId);
+//}
 
 $data = json_encode($data);
 echo $data;
