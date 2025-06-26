@@ -92,8 +92,9 @@ class Blog{
      */
     public function insert($data){
         try{
-            $sql    = "INSERT INTO $this->_table (name, status) VALUES (:name, :status)";
+            $sql    = "INSERT INTO $this->_table (title, content, blog_category_id, image) VALUES (:title, :content, :blog_category_id, :image)";
             $stmt   = $this->_conn->prepare($sql);
+
             $result = $stmt->execute($data);
 
             return $result;
@@ -114,14 +115,14 @@ class Blog{
      */
     public function update(int $id, array $data){
         try{
-            $sql    = "UPDATE $this->_table SET name=:name,status=:status WHERE id=:id";
-            $stmt   = $this->_conn->prepare($sql);
+            $sql = "UPDATE $this->_table SET title=:title, content=:content, blog_category_id=:blog_category_id, image=:image WHERE id=:id";
+            $stmt = $this->_conn->prepare($sql);
             $result = $stmt->execute($data);
+            return  $result;
 
-            return $stmt->rowCount();
         }
         catch (PDOException $e){
-            // ghi log lỗi
+            // log error
             var_dump($e->getMessage());
         }
     }
