@@ -77,6 +77,7 @@ class AuthController{
 
 // Kiểm tra thông tin tài khoản
         if (empty($errors)) {
+            $userId = $this->_userModel->getIdByUsername($username);
             $user = $this->_userModel->getInfoExact($username);
 
             if (!$user) {
@@ -95,6 +96,7 @@ class AuthController{
 
         if ($user) {
             $_SESSION['login'] = $user;
+            $_SESSION['userId'] = $userId;
             header('location: index.php');
             exit;
         }
@@ -445,6 +447,7 @@ class AuthController{
     public function logout(){
         session_start();
         unset($_SESSION['login']);
+        unset($_SESSION['userId']);
         header('location: index.php');
         exit;
     }
