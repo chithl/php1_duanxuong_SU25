@@ -88,7 +88,7 @@ class Product{
     //    search by name product
     public function getAllByName($name){
         $name = "%" . $name . "%";
-        $sql  = "SELECT * FROM products WHERE name like '$name'";
+        $sql = "SELECT p.*,c.name as category_name FROM $this->_table p INNER JOIN product_categories c ON p.product_category_id = c.id WHERE p.name like '$name'";
 
         $stmt = $this->_conn->query($sql);
 
