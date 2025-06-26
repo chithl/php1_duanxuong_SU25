@@ -28,6 +28,14 @@ class Blog{
         $this->_conn = $db->getConnection();
     }
 
+    public function getCategories(){
+        $sql    = "SELECT * FROM blog_categories";
+        $stmt   = $this->_conn->query($sql);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
     /**
      * Lấy tất cả dữ liệu từ bảng blogs với phân trang.
      *
@@ -94,6 +102,7 @@ class Blog{
         try{
             $sql    = "INSERT INTO $this->_table (title, content, blog_category_id, image) VALUES (:title, :content, :blog_category_id, :image)";
             $stmt   = $this->_conn->prepare($sql);
+
             $result = $stmt->execute($data);
 
             return $result;
@@ -119,11 +128,14 @@ class Blog{
             $result = $stmt->execute($data);
             return  $result;
 
-            return $stmt->rowCount();
         }
         catch (PDOException $e){
-            // ghi log lỗi
-            var_dump($e->getMessage());
+            file_put_contents(
+                __DIR__ . '/../Logs/error.log', // Đường dẫn tới thư mục logs
+                date('Y-m-d H:i:s') . ' - ' . $e->getMessage() . PHP_EOL,
+                FILE_APPEND
+            );
+
         }
     }
 

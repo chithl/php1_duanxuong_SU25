@@ -2,22 +2,32 @@
 $errors = $_SESSION['errors'] ?? "";
 $old = $_SESSION['old'] ?? "";
 ?>
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<!-- ============================================================== -->
+<!-- Page wrapper  -->
+<!-- ============================================================== -->
 <div class="page-wrapper">
-	<!-- Alert Success -->
-
 	<!-- ============================================================== -->
 	<!-- Bread crumb and right sidebar toggle -->
 	<!-- ============================================================== -->
 	<div class="page-breadcrumb">
+        <?php if (isset($_SESSION['errors']) && !empty($_SESSION['errors'])): ?>
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<strong><?= $_SESSION['messageError'] ?? "" ?></strong>
+			</div>
+			<script>
+                $(".alert").alert();
+			</script>
+        <?php endif; ?>
 		<div class="row">
 			<div class="col-12 d-flex no-block align-items-center">
-				<h4 class="page-title">Sửa bài viết</h4>
+				<h4 class="page-title">Quản lý bài viết</h4>
 				<div class="ms-auto text-end">
 					<nav aria-label="breadcrumb">
 						<ol class="breadcrumb">
-							<li class="breadcrumb-item"><a href="#">Thống kê</a></li>
+							<li class="breadcrumb-item"><a href="index.php">Thống kê</a></li>
 							<li class="breadcrumb-item active" aria-current="page">
-								Sửa bài viết
+								Quản lý bài viết
 							</li>
 						</ol>
 					</nav>
@@ -36,68 +46,75 @@ $old = $_SESSION['old'] ?? "";
 		<!-- Start Page Content -->
 		<!-- ============================================================== -->
 		<div class="row">
-			<div class="col-12">
+			<div class="col-md-12">
 				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Sửa bài viết</h5>
-                        <?php
-                        if (isset($_SESSION["messageError"]) && $_SESSION["messageError"] != ""):
-                            ?>
-							<div class="alert alert-warning alert-dismissible fade show" role="alert">
-								<strong><?= $_SESSION["messageError"] ?? "" ?></strong>
-								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					<form class="form-horizontal" action="?page=blog&action=update" method="post" enctype="multipart/form-data">
+						<div class="card-body">
+							<h4 class="card-title">SỬA BÀI VIẾT</h4>
+
+							<div class="form-group row">
+								<label for="name" class="col-sm-3 text-end control-label col-form-label">ID</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="id" name="id"value="<?= $result['id'] ?? '' ?>"/>
+									<small id="helpId" class="text-danger"><?= $errors['id'] ?? "" ?></small>
+								</div>
 							</div>
-                        <?php
-                        endif;
-                        ?>
-						<h2 class="text-center">Sửa bài viết</h2>
-						<div class="container w-50">
-							<form action="?page=blog&action=update" method="post" enctype="multipart/form-data">
-								<!-- ID -->
-								<div class="mb-3">
-									<label for="id" class="form-label">ID</label>
-									<input type="text" name="id" id="id" class="form-control" value="<?= $result['id'] ?>" readonly>
+							<div class="form-group row">
+								<label for="name" class="col-sm-3 text-end control-label col-form-label">Tiêu đề</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="title" name="title" placeholder="Nhập vào tiêu đề bài viết ..." value="<?= $result['title'] ?? '' ?>"/>
+									<small id="helpId" class="text-danger"><?= $errors['title'] ?? "" ?></small>
 								</div>
-
-								<!-- Name -->
-								<div class="mb-3">
-									<label for="title" class="form-label">Title</label>
-									<input type="text" name="title" id="title" class="form-control" value="<?= $result['title'] ?? '' ?>">
-									<div class="text-danger">
-										<small><?= $errors['title'] ?? "" ?></small></div>
+							</div>
+							<div class="form-group row">
+								<label for="name" class="col-sm-3 text-end control-label col-form-label">Nội dung</label>
+								<div class="col-sm-9">
+									<textarea type="text" class="form-control" id="content" name="content" placeholder="Nhập nội dung bài viết ..."><?= $result['content'] ?>"</textarea>
+									<small id="helpId" class="text-danger"><?= $errors['content'] ?? "" ?></small>
 								</div>
-
-								<!-- price -->
-								<div class="mb-3">
-									<label for="content" class="form-label">Content</label>
-									<input type="text" name="content" id="content" class="form-control" value="<?= $result['content'] ?? '' ?>">
-									<div class="text-danger">
-										<small> <?= $errors['content'] ?? "" ?> </small></div>
+							</div>
+							<div class="form-group row">
+								<label for="blog_category_id" class="col-sm-3 text-end control-label col-form-label">Mã danh mục</label>
+								<div class="col-sm-9">
+									<?php
+									$selectedCategoryId = $result['blog_category_id'] ?? "";
+									?>
+									<select class="form-control" name="blog_category_id" id="blog_category_id">
+										<option value="" disabled>--- Vui lòng chọn ---</option>
+                                        <?php foreach ($categories as $cate): ?>
+											<option value="<?= $cate['id'] ?? '' ?>" <?= $selectedCategoryId == $cate["id"] ? "selected" : "" ?>"><?= $cate["name"] ?></option>
+                                        <?php endforeach; ?>
+									</select>
+									<small id="helpId" class="text-danger"><?= $_SESSION['errors']['category_id_error'] ?? "" ?></small>
 								</div>
+							</div>
 
-								<!-- quantity -->
-								<div class="mb-3">
-									<label for="blog_category_id" class="form-label">Blog category id</label>
-									<input name="blog_category_id" id="blog_category_id" class="form-control" value="<?= $result['blog_category_id'] ?? '' ?>">
-									<div class="text-danger">
-										<small><?= $errors['blog_category_id'] ?? "" ?></small></div>
+							<div class="form-group row">
+								<label for="price" class="col-sm-3 text-end control-label col-form-label">Ảnh sản phẩm
+								</label>
+								<div class="col-sm-9">
+									<input type="file" class="form-control" id="image" name="image"/>
+									<small id="helpId" class="text-danger"><?= $_SESSION['errors']['image_error'] ?? "" ?></small>
+								<img src="Uploads/<?= $result['image'] ?>" alt="" width="100" height="100" class="mt-2 mb-2">
 								</div>
-
-								<!-- Hình ảnh -->
-								<div class="mb-3">
-									<label for="image" class="form-label">Hình ảnh</label>
-									<input type="file" name="image" id="image" class="form-control">
-									<img src="Uploads/<?= $result['image'] ?>" alt="" width="100px" height="100px">
-
-								</div>
-
-
-								<button type="submit" class="btn btn-dark">Sửa</button>
-							</form>
+							</div>
+						<div class="border-top">
+							<div class="card-body">
+								<button type="submit" class="btn btn-primary">Cập nhật</button>
+							</div>
 						</div>
-					</div>
+					</form>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#content'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+<?php unset($_SESSION['errors']); ?>
+<!-- ============================================================== --><!-- End PAge Content --><!-- ============================================================== -->
