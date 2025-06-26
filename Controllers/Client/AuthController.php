@@ -221,7 +221,7 @@ class AuthController{
         $avatar_name = null;
 
         if ($avatar && $avatar['error'] == 0) {
-            $target_dir = 'Assets/Client/Images/';
+            $target_dir = 'Uploads/Avatars/';
             $avatar_name = time() . '_' . basename($avatar['name']);
             move_uploaded_file($avatar['tmp_name'], $target_dir . $avatar_name);
         }
