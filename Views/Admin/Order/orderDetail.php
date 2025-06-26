@@ -31,11 +31,11 @@
 									toán:</strong> <?= $order['payment_method'] ?></li>
 							<li class="list-group-item"><strong>Trạng thái thanh toán:</strong>
                                 <?php
-                                if ($order['payment_status'] === 'Đã thanh toán'){
+                                if ($order['payment_status'] === 'completed'){
                                     echo '<span class="badge bg-success text-white">Đã thanh toán</span>';
-                                }elseif ($order['payment_status'] === 'Đã hủy'){
+                                }elseif ($order['payment_status'] === 'canceled'){
                                     echo '<span class="badge bg-danger text-white">Đã hủy</span>';
-                                }elseif ($order['payment_status'] === 'Đã quá hạn'){
+                                }elseif ($order['payment_status'] === 'expired'){
                                     echo '<span class="badge bg-secondary text-white">Đã quá hạn</span>';
                                 }else{
                                     echo '<span class="badge bg-warning text-white">Chờ xác nhận</span>';
@@ -45,11 +45,11 @@
 
 							<li class="list-group-item"><strong>Trạng thái giao hàng:</strong>
                                 <?php
-                                if ($order['shipping_status'] === 'Đã giao'){
+                                if ($order['shipping_status'] === 'shipped'){
                                     echo '<span class="badge bg-success text-white">Hoàn tất</span>';
-                                }elseif ($order['shipping_status'] === 'Đang giao'){
+                                }elseif ($order['shipping_status'] === 'shipping'){
                                     echo '<span class="badge bg-primary text-white">Đang giao</span>';
-                                }elseif ($order['shipping_status'] === 'Thất bại'){
+                                }elseif ($order['shipping_status'] === 'failed'){
                                     echo '<span class="badge bg-danger text-white">Giao thất bại</span>';
                                 }else{
                                     echo '<span class="badge bg-warning text-white">Chờ xác nhận</span>';

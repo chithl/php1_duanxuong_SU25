@@ -56,16 +56,16 @@ $page_number = isset($_GET['page_number']) ? $_GET['page_number'] : '1';
                                 <div class=" col-md-2 ">
                                     <select class=" form-control" name="payment_status" onchange="this.form.submit();">
                                         <option value="">Tất cả trạng thái</option>
-                                        <option value="Đang chờ xác nhận" <?= (isset($_GET['payment_status']) && $_GET['payment_status'] == 'Đang chờ xác nhận') ? 'selected' : '' ?>>
+                                        <option value="pending" <?= (isset($_GET['payment_status']) && $_GET['payment_status'] == 'pending') ? 'selected' : '' ?>>
                                             Đang chờ xác nhận
                                         </option>
-                                        <option value="Đã thanh toán" <?= (isset($_GET['payment_status']) && $_GET['payment_status'] == 'Đã thanh toán') ? 'selected' : '' ?>>
+                                        <option value="completed" <?= (isset($_GET['payment_status']) && $_GET['payment_status'] == 'completed') ? 'selected' : '' ?>>
                                             Đã thanh toán
                                         </option>
-                                        <option value="Đã hủy" <?= (isset($_GET['payment_status']) && $_GET['payment_status'] == 'Đã hủy') ? 'selected' : '' ?>>
+                                        <option value="canceled" <?= (isset($_GET['payment_status']) && $_GET['payment_status'] == 'canceled') ? 'selected' : '' ?>>
                                             Đã hủy
                                         </option>
-                                        <option value="Đã quá hạn" <?= (isset($_GET['payment_status']) && $_GET['payment_status'] == 'Đã quá hạn') ? 'selected' : '' ?>>
+                                        <option value="expired" <?= (isset($_GET['payment_status']) && $_GET['payment_status'] == 'expired') ? 'selected' : '' ?>>
                                             Đã quá hạn
                                         </option>
                                     </select>

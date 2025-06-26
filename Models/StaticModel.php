@@ -40,14 +40,14 @@ class StaticModel{
     }
 
     public function pendingOrders(){
-        $sql  = "SELECT COUNT(*) as total FROM orders WHERE payment_status = 'Chờ xác nhận'";
+        $sql  = "SELECT COUNT(*) as total FROM orders WHERE payment_status = 'pending'";
         $stmt = $this->_conn->prepare($sql);
 
         return $this->_conn->query($sql)->fetch()['total'];
     }
 
     public function completedOrders(){
-        $sql  = "SELECT COUNT(*) as total FROM orders WHERE payment_status ='Đã thanh toán'";
+        $sql  = "SELECT COUNT(*) as total FROM orders WHERE payment_status ='completed'";
         $stmt = $this->_conn->prepare($sql);
 
         return $this->_conn->query($sql)->fetch()['total'];
@@ -55,14 +55,14 @@ class StaticModel{
 
     function getTodayRevenue(){
         $sql = "SELECT SUM(total_price) FROM orders
-            WHERE payment_status = 'Đã thanh toán' AND DATE(created_at) = CURDATE()";
+            WHERE payment_status = 'completed' AND DATE(created_at) = CURDATE()";
 
         return $this->_conn->query($sql)->fetchColumn() ?? 0;
     }
 
     function getMonthRevenue(){
         $sql = "SELECT SUM(total_price) FROM orders
-            WHERE payment_status = 'Đã thanh toán'
+            WHERE payment_status = 'completed'
             AND MONTH(created_at) = MONTH(CURDATE())
             AND YEAR(created_at) = YEAR(CURDATE())";
 
@@ -71,13 +71,13 @@ class StaticModel{
 
     function countTodayOrders(){
         $sql = "SELECT COUNT(*) FROM orders
-            WHERE payment_status = 'Đã thanh toán' AND DATE(created_at) = CURDATE()";
+            WHERE payment_status = 'completed' AND DATE(created_at) = CURDATE()";
 
         return $this->_conn->query($sql)->fetchColumn() ?? 0;
     }
 
     function countPendingOrders(){
-        $sql = "SELECT COUNT(*) FROM orders WHERE payment_status = 'Chờ xác nhận'";
+        $sql = "SELECT COUNT(*) FROM orders WHERE payment_status = 'pending'";
 
         return $this->_conn->query($sql)->fetchColumn() ?? 0;
     }
@@ -85,7 +85,7 @@ class StaticModel{
     function getRevenueByDay(){
         $sql = "SELECT DATE(created_at) AS day, SUM(total_price) AS revenue
             FROM orders
-            WHERE payment_status = 'Đã thanh toán'
+            WHERE payment_status = 'completed'
             AND created_at >= CURDATE() - INTERVAL 7 DAY
             GROUP BY DATE(created_at)
             ORDER BY day ASC";
@@ -98,7 +98,7 @@ class StaticModel{
                 FROM order_details od
                 JOIN orders o ON od.order_id = o.id
                 JOIN products p ON od.product_id = p.id
-                WHERE o.payment_status = 'Đã thanh toán'
+                WHERE o.payment_status = 'completed'
                 GROUP BY p.name
                 ORDER BY total_sold DESC
                 LIMIT :limit";
