@@ -2,7 +2,7 @@
 $errors = $_SESSION['errors'] ?? "";
 $old = $_SESSION['old'] ?? "";
 ?>
-
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <!-- ============================================================== -->
 <!-- Page wrapper  -->
 <!-- ============================================================== -->
@@ -69,7 +69,7 @@ $old = $_SESSION['old'] ?? "";
 							<div class="form-group row">
 								<label for="name" class="col-sm-3 text-end control-label col-form-label">Nội dung</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control" id="content" name="content" placeholder="Nhập nội dung bài viết ..." value="<?= $result['content'] ?>"/>
+									<textarea type="text" class="form-control" id="content" name="content" placeholder="Nhập nội dung bài viết ..."><?= $result['content'] ?>"</textarea>
 									<small id="helpId" class="text-danger"><?= $errors['content'] ?? "" ?></small>
 								</div>
 							</div>
@@ -109,5 +109,12 @@ $old = $_SESSION['old'] ?? "";
 		</div>
 	</div>
 </div>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#content'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>
 <?php unset($_SESSION['errors']); ?>
 <!-- ============================================================== --><!-- End PAge Content --><!-- ============================================================== -->

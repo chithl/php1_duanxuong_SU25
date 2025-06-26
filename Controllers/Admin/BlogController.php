@@ -183,7 +183,7 @@ class BlogController{
                 $errors['content'] = "Nội dung không được để trống.";
                 $_SESSION['messageError'] = "Xảy ra lỗi, vui lòng kiểm tra lại dữ liệu.";
             }
-            if (empty($blog_category_id)) {
+            if (empty($blog_category_id) ){
                 $errors['blog_category_id'] = "Danh mục không được để trống.";
                 $_SESSION['messageError'] = "Xảy ra lỗi, vui lòng kiểm tra lại dữ liệu.";
             }
