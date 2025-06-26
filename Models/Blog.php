@@ -42,7 +42,7 @@ class Blog{
         $stmt->bindParam(':start', $start, PDO::PARAM_INT);
         $stmt->bindParam(':end', $end, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->fetchAll();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
     }
@@ -61,7 +61,7 @@ class Blog{
             'status' => $status,
         ];
         $stmt->execute($data);
-        $result = $stmt->fetchAll();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
     }
@@ -94,7 +94,6 @@ class Blog{
         try{
             $sql    = "INSERT INTO $this->_table (title, content, blog_category_id, image) VALUES (:title, :content, :blog_category_id, :image)";
             $stmt   = $this->_conn->prepare($sql);
-
             $result = $stmt->execute($data);
 
             return $result;
@@ -120,9 +119,10 @@ class Blog{
             $result = $stmt->execute($data);
             return  $result;
 
+            return $stmt->rowCount();
         }
         catch (PDOException $e){
-            // log error
+            // ghi log lỗi
             var_dump($e->getMessage());
         }
     }
@@ -146,5 +146,52 @@ class Blog{
             // ghi log lỗi
             var_dump($e);
         }
+    }
+
+    public function getCategoriesWithCount(){
+        $sql  = "SELECT bc.id, bc.name, COUNT(b.id) AS count
+             FROM blog_categories bc
+             LEFT JOIN blogs b ON bc.id = b.blog_category_id
+             GROUP BY bc.id, bc.name";
+        $stmt = $this->_conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllByCategory($categoryId){
+        $sql  = "SELECT * FROM $this->_table WHERE blog_category_id = :category_id";
+        $stmt = $this->_conn->prepare($sql);
+        $stmt->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function search($keyword){
+        $sql = "SELECT b.* 
+            FROM blogs b
+            LEFT JOIN blog_categories bc ON b.blog_category_id = bc.id
+            WHERE b.title LIKE :keyword 
+               OR b.content LIKE :keyword 
+               OR bc.name LIKE :keyword";
+
+        $stmt          = $this->_conn->prepare($sql);
+        $searchKeyword = '%' . $keyword . '%';
+        $stmt->bindParam(':keyword', $searchKeyword, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function searchByCategory($keyword, $categoryId){
+        $sql           = "SELECT * FROM $this->_table WHERE (title LIKE :keyword OR content LIKE :keyword) AND blog_category_id = :category_id";
+        $stmt          = $this->_conn->prepare($sql);
+        $searchKeyword = '%' . $keyword . '%';
+        $stmt->bindParam(':keyword', $searchKeyword, PDO::PARAM_STR);
+        $stmt->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
