@@ -5,7 +5,7 @@
 			<!-- Profile Header -->
 			<div class="profile-header">
 				<div class="avatar-placeholder">
-                    <img src="Assets/Client/Images/<?= $user['avatar'] ?>" alt="Avatar" class="profile-avatar"
+					<img src="Uploads/Avatars/<?= $user['avatar'] ?>" alt="Avatar" class="profile-avatar"
                          style="margin-top: 20px; height: 111px;"/>
 				</div>
                 <h2 class="profile-name"><?= $user['username'] ?></h2>
