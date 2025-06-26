@@ -12,7 +12,7 @@ class DeliveryController{
 
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, [
             "Content-Type: application/json",
-            "Token: 3976dec8-5124-11f0-928a-1a690f81b498"
+            "Token: a7af6e4a-5250-11f0-8971-76eec3689da9"
         ]);
     }
 
@@ -70,7 +70,7 @@ class DeliveryController{
     public function createOrder($toName, $toPhone, $toAddress, $products, $toDistrictId, $toWardCode)
     {
         // DEFAULT SHOP INFORMATION
-        $shopId = 4792933;
+        $shopId = 4828595;
         $fromName = "Lê Minh Quốc Bảo";
         $fromPhone = "0792846735";
         $fromAddress = "Phong Điền, Cần Thơ";
@@ -127,11 +127,15 @@ class DeliveryController{
         } else {
             echo "Phản hồi từ GHN:\n";
             // header("location: index.php");
-            $result = json_decode($response, true)["code"];
+//            $result = json_decode($response, true)["code"];
+            $result = json_decode($response, true);
 
-            if($result == 200) {
-                echo "Thành công";
+
+            if($result["code"] != 200) {
+                file_put_contents("Logs/delivery.log", $result['code_message_value'] . PHP_EOL, FILE_APPEND);
             }
+
+            return $result;
         }
 
         curl_close($this->ch);
