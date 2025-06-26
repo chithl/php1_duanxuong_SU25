@@ -123,8 +123,10 @@
 			<div class="col-lg-12">
 				<div class="hero__search w-100">
 					<div class="hero__search__form w-100">
-						<form action="#" class="d-flex w-100">
-							<input type="text" class="form-control" placeholder="Bạn đang tìm kiếm gì?" style="flex:1;">
+						<form action="index.php?page=product-list" class="d-flex w-100">
+							<input type="hidden" name="page" value="product-list">
+							<input type="text" name="name" class="form-control" placeholder="Bạn đang tìm kiếm gì?" style="flex:1;" value="<?= $_GET['name'] ?? ''; ?>">>
+
 							<button type="submit" class="site-btn" style="min-width:120px;">Tìm</button>
 						</form>
 					</div>
